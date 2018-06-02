@@ -98,7 +98,7 @@ test('equals :: Result f => f ~> f -> Boolean', (t) => {
   t.true(Err(1).equals(Err(1)))
 })
 
-test('either :: Result f => f a b ~> (a -> r, b -> r) -> r', (t) => {
+test('either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r', (t) => {
   t.is(Ok(1).either((a) => a + 1, (b) => b + 2), 2)
   t.is(Err(2).either((a) => a + 1, (b) => b + 2), 4)
 })
