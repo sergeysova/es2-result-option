@@ -99,7 +99,7 @@ return (await getUser(1))
 ```
 
 
-## Documentation
+# Documentation
 
 <details><summary>Option</summary>
 
@@ -137,7 +137,7 @@ return (await getUser(1))
 </details>
 
 
-### Option
+## Option
 
 Package exports `Option` and shortcuts for `Some`, `None`
 
@@ -155,7 +155,7 @@ import { Option, Some, None } from '@es2/result-option'
 `Some` and `None` is shortcuts for `Option.some` and `Option.none`.
 
 
-#### Option.of
+### Option.of
 
 Create option of passed value.
 
@@ -173,7 +173,7 @@ Option.of(123).isSome() === true
 ```
 
 
-#### Option.isOption
+### Option.isOption
 
 Check if option passed.
 
@@ -189,7 +189,7 @@ Option.isOption(None()) === true
 Option.isOption(Option.some(1)) === true
 ```
 
-#### Option.encase
+### Option.encase
 
 Wrap function that throws to function that returns `Option`.
 
@@ -214,7 +214,7 @@ safeFoo(2).isSome() === true
 safeFoo(2).unwrap() === 4
 ```
 
-#### Option.wrap
+### Option.wrap
 
 Wrap function that throws or returns `null`, `undefined`, `Nan` to function that returns `Option`.
 
@@ -238,12 +238,12 @@ safePanic().isNone() === true
 safeBar(2, 1).unwrap() === 2
 ```
 
-#### Option.into
+### Option.into
 
 Convert any value to option.
 
 ```hs
-into :: Option f -> a -> f a
+into :: Option f => a -> f a
 ```
 
 If passed `Option` just returns it.<br/>
@@ -256,7 +256,7 @@ Option.into(null).isNone() === true
 Option.into(None()).isNone() === true
 ```
 
-#### Option.some
+### Option.some
 
 Create some value.
 
@@ -273,7 +273,7 @@ Some(2)
 Some(null) /** @see Option.of */
 ```
 
-#### Option.none
+### Option.none
 
 Create none value.
 
@@ -290,7 +290,7 @@ None()
 Option.none().equals(None()) === true
 ```
 
-#### isSome
+### isSome
 
 Check if passed `Some`.
 
@@ -307,7 +307,7 @@ None.isNone(Some(1)) === false
 None(1).isSome() === false
 ```
 
-#### isNone
+### isNone
 
 
 Check if passed `None`.
@@ -325,7 +325,7 @@ None.isNone(Some(1)) === false
 None(1).isNone() === true
 ```
 
-#### equals
+### equals
 
 Check if passed options is equals.
 
@@ -346,7 +346,7 @@ None().equals(None()) === true
 None().equals(Some(1)) === false
 ```
 
-#### unwrap
+### unwrap
 
 Get value from option.
 
@@ -362,7 +362,7 @@ Some(1).unwrap() === 1
 None().unwrap() // Oops! 'unwrap() called on None value'
 ```
 
-#### unwrapOr
+### unwrapOr
 
 Get value from option, or use default.
 
@@ -377,7 +377,7 @@ Some(1).unwrapOr(2) === 1
 None().unwrapOr(2) === 2
 ```
 
-#### unwrapOrElse
+### unwrapOrElse
 
 Get value from option, or call function.
 
@@ -393,7 +393,7 @@ Some(1).unwrapOrElse(() => 2) === 1
 None(1).unwrapOrElse(() => 2) === 2
 ```
 
-#### map
+### map
 
 Apply function to a value inside option.
 
@@ -411,7 +411,7 @@ Some(1).map(incr).unwrap() === 2
 None().map(incr).isNone() === true
 ```
 
-#### mapOr
+### mapOr
 
 Apply function to a value inside option or default.
 
@@ -431,7 +431,7 @@ Some(1).mapOr(def, incr).unwrap() === 2
 None().mapOr(def, incr).unwrap() === 3
 ```
 
-#### mapOrElse
+### mapOrElse
 
 Apply function to a value inside option or call function to get value.
 
@@ -450,7 +450,7 @@ Some(1).mapOrElse(getDef, incr).unwrap() === 2
 None().mapOrElse(getDef, incr).unwrap() === 3
 ```
 
-#### chain
+### chain
 
 Apply function that returns `Option` to value inside `Option`. <br/>
 If passed function returns not option, `Option.of` used to convert to option.
@@ -461,7 +461,7 @@ chain :: Option f => f a ~> (a -> f b) -> f b
 
 `chain` is an alias for [`andThen`](#andthen).
 
-#### iter
+### iter
 
 Get iterator of option value.
 
@@ -477,7 +477,7 @@ None().iter().next().done === true
 None().iter().next().value === undefined
 ```
 
-#### and
+### and
 
 Return passed option if current is `Some`.
 
@@ -502,7 +502,7 @@ Some(1).and(Some(2)).unwrap() === 2
 Some(5).and(None()).isNone() === true
 ```
 
-#### andThen
+### andThen
 
 Call function that returns option if current is `Some`.
 
@@ -529,7 +529,7 @@ None().andThen(sq).isNone() === true
 Some(2).andThen(() => None()).isNone() === true
 ```
 
-#### filter
+### filter
 
 Check value inside option.
 
@@ -549,7 +549,7 @@ Some(2).filter(isEven).unwrap() === 2
 Some(3).filter(isEven).isNone() === true
 ```
 
-#### or
+### or
 
 Return passed option if current is `None`.
 
@@ -577,7 +577,7 @@ Some(2).or(None()).unwrap() === 2
 None().or(None()).isNone() === true
 ```
 
-#### orElse
+### orElse
 
 Call function to get option if current `None`.
 

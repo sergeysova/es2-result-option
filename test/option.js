@@ -212,7 +212,7 @@ test('wrap :: Option f => (r -> a) -> (r -> f a)', (t) => {
   t.true(fF().isSome())
 })
 
-test('into :: Option f -> a -> f a', (t) => {
+test('into :: Option f => a -> f a', (t) => {
   t.is(Option.into(1).unwrap(), 1)
   t.is(Option.into(Option.some(1)).unwrap(), 1)
   t.true(Option.into(Option.none()).isNone())
