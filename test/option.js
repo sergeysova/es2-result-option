@@ -21,10 +21,12 @@ test('Option.of :: Option f => a -> f a', (t) => {
 
 test('Some :: Option f => a -> f a', (t) => {
   t.is(Option.some(1).unwrap(), 1)
+  t.is(Some(1).unwrap(), 1)
 })
 
 test('None :: Option f, a => b -> f a', (t) => {
   t.true(Option.none().isNone())
+  t.true(None().isNone())
 })
 
 test('Option.isOption :: Option f => f a -> Boolean', (t) => {

@@ -169,6 +169,9 @@ function Ok(data) {
 
     equals: (result) => Ok.isOk(result) && result.unwrap() === data,
 
+    // eslint-disable-next-line no-unused-vars
+    either: (mapFn, errFn) => mapFn(data),
+
     map: (fn) => Ok(fn(data)),
 
     // eslint-disable-next-line no-unused-vars
@@ -177,7 +180,7 @@ function Ok(data) {
     // eslint-disable-next-line no-unused-vars
     bimap: (f, g) => Ok(f(data)),
 
-    chain: (fn) => fn(data),
+    chain: (fn) => Result.into(fn(data)),
 
     // eslint-disable-next-line no-unused-vars
     chainErr: (fn) => Ok(data),
@@ -186,9 +189,9 @@ function Ok(data) {
       yield data
     },
 
-    and: (result) => result,
+    and: (result) => Result.into(result),
 
-    andThen: (fn) => fn(data),
+    andThen: (fn) => Result.into(fn(data)),
 
     // eslint-disable-next-line no-unused-vars
     or: (result) => Ok(data),
@@ -242,6 +245,8 @@ function Err(error) {
 
     equals: (result) => Err.isErr(result) && result.unwrapErr() === error,
 
+    either: (okFn, errFn) => errFn(error),
+
     // eslint-disable-next-line no-unused-vars
     map: (fn) => Err(error),
 
@@ -253,7 +258,7 @@ function Err(error) {
     // eslint-disable-next-line no-unused-vars
     chain: (fn) => Err(error),
 
-    chainErr: (fn) => fn(error),
+    chainErr: (fn) => Result.into(fn(error)),
 
     // eslint-disable-next-line no-empty-function
     * iter() {
@@ -265,9 +270,9 @@ function Err(error) {
     // eslint-disable-next-line no-unused-vars
     andThen: (fn) => Err(error),
 
-    or: (result) => result,
+    or: (result) => Result.into(result),
 
-    orElse: (fn) => fn(error),
+    orElse: (fn) => Result.into(fn(error)),
 
     unwrap: () => {
       throw error
@@ -306,6 +311,12 @@ Err.of = Err
 const Result = {
   ok: Ok,
   err: Err,
+  of: (value) => value instanceof Error
+    ? Err.of(value)
+    : Ok.of(value),
+  into: (value) => Result.isResult(value)
+    ? value
+    : Result.of(value),
   encase: (fn) => (...args) => {
     try {
       return Ok(fn(...args))
@@ -315,10 +326,6 @@ const Result = {
     }
   },
   isResult: (instance) => Ok.isOk(instance) || Err.isErr(instance),
-  of: Ok.of,
-  into: (value) => value instanceof Error
-    ? Err.of(value)
-    : Ok.of(value),
 }
 
 module.exports = {

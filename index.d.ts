@@ -6,6 +6,7 @@ export interface ResultClass<T, E> {
   isErr(): boolean;
 
   equals<F = E>(result: ResultClass<T, F>): boolean;
+  either<R>(mapFn: (value: T) => R, errFn: (value: T) => R): R;
 
   map<U>(fn: (value: T) => U): ResultClass<U, E>;
   mapErr<F>(fn: (error: E) => F): ResultClass<T, F>;

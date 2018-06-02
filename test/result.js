@@ -14,26 +14,33 @@ test('no constructor of Result', (t) => {
   t.true(typeof Result === 'object')
 })
 
-test('Ok :: Result f, b => a -> f a b', (t) => {
+test('Ok :: Result f => a -> f a b', (t) => {
   t.is(Ok(1).unwrap(), 1)
+  t.is(Result.ok(1).unwrap(), 1)
 })
 
-test('Err :: Result f, a => b -> f a b', (t) => {
+test('Err :: Result f => b -> f a b', (t) => {
   t.is(Err(1).unwrapErr(), 1)
+  t.is(Result.err(1).unwrapErr(), 1)
 })
 
-test('of :: Result f, a => a -> f a', (t) => {
-  t.is(Result.of, Ok.of)
+test('Result.of :: Result f => a -> f a', (t) => {
+  t.is(Result.of(1).unwrap(), 1)
+  t.is(Result.of(null).unwrap(), null)
+  const error = new Error('test error')
+
+  t.is(Result.of(error).unwrapErr(), error)
 })
 
-test('into :: Result f, a => a -> f a', (t) => {
+test('Result.into :: Result f => a -> f a', (t) => {
   t.true(Result.into(new Error('example')).isErr())
   t.is(Result.into(new Error('example')).unwrapErr().message, 'example')
   t.is(Result.into('example').unwrap(), 'example')
+  t.is(Result.into(Ok(1)).unwrap(), 1)
+  t.is(Result.into(Err(2)).unwrapErr(), 2)
 })
 
-
-test('isResult :: Result f => f a b -> Boolean', (t) => {
+test('Result.isResult :: Result f => f a b -> Boolean', (t) => {
   t.true(Result.isResult(Ok(1)))
   t.true(Result.isResult(Err(1)))
 
@@ -42,6 +49,31 @@ test('isResult :: Result f => f a b -> Boolean', (t) => {
   t.false(Result.isResult(Result))
   t.false(Result.isResult(Result.ok))
   t.false(Result.isResult(Result.err))
+})
+
+test('Result.encase :: Result f => (r -> a) -> (r -> f a b)', (t) => {
+  t.is(typeof Result.encase(() => { }), 'function', 'encase return function')
+
+  const f1 = Result.encase(() => 1)
+  const f2 = Result.encase((a) => a)
+  const f3 = Result.encase((a, b) => a + b)
+  const f4 = Result.encase(() => {
+    throw new Error('4')
+  })
+  const f5 = Result.encase((a, b, c) => {
+    throw new Error(`${a + b + c}`)
+  })
+  const f6 = Result.encase((a, b, c) => {
+    throw `${a + b + c}` // eslint-disable-line no-throw-literal
+  })
+
+  t.is(f1().unwrap(), 1, 'return Ok wrapped value')
+  t.is(f2(2).unwrap(), 2, 'pass single argument and return Ok')
+  t.is(f3(1, 2).unwrap(), 3, 'pass 2 arguments and return Ok')
+  t.deepEqual(f4().unwrapErr(), new Error('4'), 'wrap exception to Err')
+  t.deepEqual(f5(1, 2, 2).unwrapErr(), new Error('5'), 'pass 3 args and wrap exception to Err')
+  t.is(f6(1, 2, 3).unwrapErr(), '6', 'wrap throwed string to Err')
+  t.true(f5(1, 2, 3).unwrapErr() instanceof Error)
 })
 
 test('isOk :: Result f => f a b ~> Boolean', (t) => {
@@ -64,6 +96,11 @@ test('equals :: Result f => f ~> f -> Boolean', (t) => {
   t.false(Err(1).equals(Ok(1)))
   t.false(Err(1).equals(Err(2)))
   t.true(Err(1).equals(Err(1)))
+})
+
+test('either :: Result f => f a b ~> (a -> r, b -> r) -> r', (t) => {
+  t.is(Ok(1).either((a) => a + 1, (b) => b + 2), 2)
+  t.is(Err(2).either((a) => a + 1, (b) => b + 2), 4)
 })
 
 test('map :: Result f => f a b ~> (a -> q) -> f q', (t) => {
@@ -256,27 +293,3 @@ test('extract :: (Result f, Tuple t) => Result f a b ~> t b', (t) => {
   t.deepEqual(Err(1).extractErr(), [1])
 })
 
-test('encase :: Result f => (r -> a) -> (r -> f a b)', (t) => {
-  t.is(typeof Result.encase(() => { }), 'function', 'encase return function')
-
-  const f1 = Result.encase(() => 1)
-  const f2 = Result.encase((a) => a)
-  const f3 = Result.encase((a, b) => a + b)
-  const f4 = Result.encase(() => {
-    throw new Error('4')
-  })
-  const f5 = Result.encase((a, b, c) => {
-    throw new Error(`${a + b + c}`)
-  })
-  const f6 = Result.encase((a, b, c) => {
-    throw `${a + b + c}` // eslint-disable-line no-throw-literal
-  })
-
-  t.is(f1().unwrap(), 1, 'return Ok wrapped value')
-  t.is(f2(2).unwrap(), 2, 'pass single argument and return Ok')
-  t.is(f3(1, 2).unwrap(), 3, 'pass 2 arguments and return Ok')
-  t.deepEqual(f4().unwrapErr(), new Error('4'), 'wrap exception to Err')
-  t.deepEqual(f5(1, 2, 2).unwrapErr(), new Error('5'), 'pass 3 args and wrap exception to Err')
-  t.is(f6(1, 2, 3).unwrapErr(), '6', 'wrap throwed string to Err')
-  t.true(f5(1, 2, 3).unwrapErr() instanceof Error)
-})
