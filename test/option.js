@@ -14,7 +14,7 @@ test('no constructor of Option', (t) => {
   t.true(typeof Option === 'object')
 })
 
-test('of :: Option f => a -> f a', (t) => {
+test('Option.of :: Option f => a -> f a', (t) => {
   t.is(Option.of(1).unwrap(), 1)
   t.is(Option.of(null).isNone(), true)
 })
@@ -27,7 +27,7 @@ test('None :: Option f, a => b -> f a', (t) => {
   t.true(Option.none().isNone())
 })
 
-test('isOption :: Option f => f a -> Boolean', (t) => {
+test('Option.isOption :: Option f => f a -> Boolean', (t) => {
   t.true(Option.isOption(Some(1)))
   t.true(Option.isOption(None(1)))
 
@@ -52,7 +52,7 @@ test('isNone :: Option f => f a ~> Boolean', (t) => {
   t.false(Some.isSome(None()))
 })
 
-test('equals :: (Option f, a, b) => f a ~> f b -> Boolean', (t) => {
+test('equals :: Option f => f a ~> f b -> Boolean', (t) => {
   t.true(Some(1).equals(Some(1)))
   t.false(Some(2).equals(Some(1)))
   t.false(None().equals(Some(1)))
@@ -159,7 +159,7 @@ test('orElse :: Option f => f a ~> (() -> f a) -> f a', (t) => {
   t.true(None().orElse(nobody).isNone())
 })
 
-test('encase :: Option f => (r -> a) -> (r -> f a)', (t) => {
+test('Option.encase :: Option f => (r -> a) -> (r -> f a)', (t) => {
   const f1 = Option.encase(() => 1)
   const f2 = Option.encase((a) => a + 1)
   const f3 = Option.encase((...args) => args)
@@ -186,7 +186,7 @@ test('encase :: Option f => (r -> a) -> (r -> f a)', (t) => {
   t.true(fF().isSome())
 })
 
-test('wrap :: Option f => (r -> a) -> (r -> f a)', (t) => {
+test('Option.wrap :: Option f => (r -> a) -> (r -> f a)', (t) => {
   const f1 = Option.wrap(() => 1)
   const f2 = Option.wrap((a) => a + 1)
   const f3 = Option.wrap((...args) => args)
@@ -212,7 +212,7 @@ test('wrap :: Option f => (r -> a) -> (r -> f a)', (t) => {
   t.true(fF().isSome())
 })
 
-test('into :: Option f => a -> f a', (t) => {
+test('Option.into :: Option f => a -> f a', (t) => {
   t.is(Option.into(1).unwrap(), 1)
   t.is(Option.into(Option.some(1)).unwrap(), 1)
   t.true(Option.into(Option.none()).isNone())

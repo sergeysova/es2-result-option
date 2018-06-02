@@ -159,9 +159,12 @@ import { Option, Some, None } from '@es2/result-option'
 
 Create option of passed value.
 
+<details><summary><code>Option.of :: Option f => a -> f a</code></summary>
+
 ```hs
-of :: Option f => a -> f a
+Option.of :: Option f => a -> f a
 ```
+</details>
 
 `None` returned if passed `null` or `undefined` to `Option.of`, otherwise returns `Some`.
 
@@ -177,9 +180,13 @@ Option.of(123).isSome() === true
 
 Check if option passed.
 
+<details><summary><code>Option.isOption :: Option f => f a -> Boolean</code></summary>
+
 ```hs
-isOption :: Option f => f a -> Boolean
+Option.isOption :: Option f => f a -> Boolean
 ```
+</details>
+
 
 If passed instance of `Option` returns `true`.
 
@@ -193,9 +200,13 @@ Option.isOption(Option.some(1)) === true
 
 Wrap function that throws to function that returns `Option`.
 
+<details><summary><code>Option.encase :: Option f => (r -> a) -> (r -> f a)</code></summary>
+
 ```hs
-encase :: Option f => (r -> a) -> (r -> f a)
+Option.encase :: Option f => (r -> a) -> (r -> f a)
 ```
+</details>
+
 
 Example
 
@@ -218,9 +229,12 @@ safeFoo(2).unwrap() === 4
 
 Wrap function that throws or returns `null`, `undefined`, `Nan` to function that returns `Option`.
 
+<details><summary><code>Option.wrap :: Option f => (r -> a) -> (r -> f a)</code></summary>
+
 ```hs
-wrap :: Option f => (r -> a) -> (r -> f a)
+Option.wrap :: Option f => (r -> a) -> (r -> f a)
 ```
+</details>
 
 Example
 
@@ -242,9 +256,12 @@ safeBar(2, 1).unwrap() === 2
 
 Convert any value to option.
 
+<details><summary><code>Option.into :: Option f => a -> f a</code></summary>
+
 ```hs
-into :: Option f => a -> f a
+Option.into :: Option f => a -> f a
 ```
+</details>
 
 If passed `Option` just returns it.<br/>
 Otherwise wrap result with `Option.of`.
@@ -260,10 +277,13 @@ Option.into(None()).isNone() === true
 
 Create some value.
 
+<details><summary><code>Option.some :: Option f => a -> f a</code></summary>
+
 ```hs
+Option.some :: Option f => a -> f a
 Some :: Option f => a -> f a
-some :: Option f => a -> f a
 ```
+</details>
 
 Wrap any passed value to `Some`
 
@@ -277,10 +297,13 @@ Some(null) /** @see Option.of */
 
 Create none value.
 
+<details><summary><code>Option.none :: (Option f, a) => b -> f a</code></summary>
+
 ```hs
-None :: Option f, a => b -> f a
-none :: Option f, a => b -> f a
+Option.none :: Option f => b -> f a
+None :: Option f => b -> f a
 ```
+</details>
 
 Just return empty `Option` (instance of Some).
 
@@ -294,10 +317,13 @@ Option.none().equals(None()) === true
 
 Check if passed `Some`.
 
+<details><summary><code>isSome :: Option f => f a ~> Boolean</code></summary>
+
 ```hs
 isSome :: Option f => f a ~> Boolean
-isSome :: Option f => f a -> Boolean
+Some.isSome :: Option f => f a -> Boolean
 ```
+</details>
 
 `exampleOption.isSome()` is shortcut for `Some.isSome(exampleOption)`
 
@@ -312,10 +338,13 @@ None(1).isSome() === false
 
 Check if passed `None`.
 
+<details><summary><code>isNone :: Option f => f a ~> Boolean</code></summary>
+
 ```hs
 isNone :: Option f => f a ~> Boolean
-isNone :: Option f => f a -> Boolean
+None.isNone :: Option f => f a -> Boolean
 ```
+</details>
 
 `exampleOption.isNone()` is shortcut for `None.isNone(exampleOption)`
 
@@ -329,9 +358,12 @@ None(1).isNone() === true
 
 Check if passed options is equals.
 
+<details><summary><code>equals :: Option f => f a ~> f b -> Boolean</code></summary>
+
 ```hs
-equals :: (Option f, a, b) => f a ~> f b -> Boolean
+equals :: Option f => f a ~> f b -> Boolean
 ```
+</details>
 
 If passed `Some` and `None` returns `false`. Check equality with `===`.
 
@@ -350,9 +382,12 @@ None().equals(Some(1)) === false
 
 Get value from option.
 
+<details><summary><code>unwrap :: Option f => f a ~> a!</code></summary>
+
 ```hs
 unwrap :: Option f => f a ~> a!
 ```
+</details>
 
 If `unwrap` called on `None` throws `OptionException('unwrap() called on None value')`<br/>
 Otherwise return value.
@@ -366,9 +401,13 @@ None().unwrap() // Oops! 'unwrap() called on None value'
 
 Get value from option, or use default.
 
+<details><summary><code>unwrapOr :: Option f => f a ~> a -> a</code></summary>
+
 ```hs
 unwrapOr :: Option f => f a ~> a -> a
 ```
+</details>
+
 
 If `unwrapOr` called on `None` returns argument.
 
@@ -381,9 +420,12 @@ None().unwrapOr(2) === 2
 
 Get value from option, or call function.
 
+<details><summary><code>unwrapOrElse :: Option f => f a ~> (() -> a) -> a</code></summary>
+
 ```hs
 unwrapOrElse :: Option f => f a ~> (() -> a) -> a
 ```
+</details>
 
 If `unwrapOrElse` passed on `None` calls argument function to get default value.
 
@@ -397,9 +439,12 @@ None(1).unwrapOrElse(() => 2) === 2
 
 Apply function to a value inside option.
 
+<details><summary><code>map :: Option f => f a ~> (a -> b) -> f b</code></summary>
+
 ```hs
 map :: Option f => f a ~> (a -> b) -> f b
 ```
+</details>
 
 If `map` called on `None` returns `None`, function do not call.<br/>
 If passed function returns `null` or `undefined` returns `Null`.<br/>
@@ -415,9 +460,12 @@ None().map(incr).isNone() === true
 
 Apply function to a value inside option or default.
 
+<details><summary><code>mapOr :: Option f => f a ~> (b, (a -> b)) -> b</code></summary>
+
 ```hs
 mapOr :: Option f => f a ~> (b, (a -> b)) -> b
 ```
+</details>
 
 If `mapOr` called on `None` function called on default value (first argument).<br/>
 If passed function returns `null` or `undefined` returns `None`.<br/>
@@ -435,9 +483,12 @@ None().mapOr(def, incr).unwrap() === 3
 
 Apply function to a value inside option or call function to get value.
 
+<details><summary><code>mapOrElse :: Option f => f a ~> ((() -> b), (a -> b)) -> b</code></summary>
+
 ```hs
 mapOrElse :: Option f => f a ~> ((() -> b), (a -> b)) -> b
 ```
+</details>
 
 If `mapOrElse` called on `None` first argument called to get default value.<br/>
 If any passed function returns `null` or `undefined` returns `None`.<br/>
@@ -455,9 +506,12 @@ None().mapOrElse(getDef, incr).unwrap() === 3
 Apply function that returns `Option` to value inside `Option`. <br/>
 If passed function returns not option, `Option.of` used to convert to option.
 
+<details><summary><code>chain :: Option f => f a ~> (a -> f b) -> f b</code></summary>
+
 ```hs
 chain :: Option f => f a ~> (a -> f b) -> f b
 ```
+</details>
 
 `chain` is an alias for [`andThen`](#andthen).
 
@@ -465,9 +519,12 @@ chain :: Option f => f a ~> (a -> f b) -> f b
 
 Get iterator of option value.
 
+<details><summary><code>iter :: (Option f, Iterator i) => f a ~> i a</code></summary>
+
 ```hs
 iter :: (Option f, Iterator i) => f a ~> i a
 ```
+</details>
 
 If `iter` called on `None` returns done iterator.
 
@@ -481,9 +538,12 @@ None().iter().next().value === undefined
 
 Return passed option if current is `Some`.
 
+<details><summary>and :: Option f => f a ~> f b -> f b<code></code></summary>
+
 ```hs
 and :: Option f => f a ~> f b -> f b
 ```
+</details>
 
 If `and` called on `None` returns `None`.<br/>
 If passed not option, `Option.of` used to convert to option.<br/>
@@ -506,9 +566,12 @@ Some(5).and(None()).isNone() === true
 
 Call function that returns option if current is `Some`.
 
+<details><summary><code>andThen :: Option f => f a ~> (a -> f b) -> f b</code></summary>
+
 ```hs
 andThen :: Option f => f a ~> (a -> f b) -> f b
 ```
+</details>
 
 If `andThen` called on `None` returns `None`.<br/>
 If passed function returns not option, `Option.of` used to convert to option.<br/>
@@ -533,9 +596,12 @@ Some(2).andThen(() => None()).isNone() === true
 
 Check value inside option.
 
+<details><summary><code>filter :: Option f => f a ~> (a -> Boolean) -> f a</code></summary>
+
 ```hs
 filter :: Option f => f a ~> (a -> Boolean) -> f a
 ```
+</details>
 
 If `filter` called on `None` passed function not called and returns `None`. <br/>
 If passed function returns "falsy" value, `filter` call returns `None`. <br/>
@@ -553,9 +619,12 @@ Some(3).filter(isEven).isNone() === true
 
 Return passed option if current is `None`.
 
+<details><summary><code>or :: Option f => f a ~> f a -> f a</code></summary>
+
 ```hs
 or :: Option f => f a ~> f a -> f a
 ```
+</details>
 
 If `or` called on `None` returns passed option. <br/>
 If passed not option, `Option.of` used to convert to option.<br/>
@@ -581,9 +650,12 @@ None().or(None()).isNone() === true
 
 Call function to get option if current `None`.
 
+<details><summary><code>orElse :: Option f => f a ~> (() -> f a) -> f a</code></summary>
+
 ```hs
 orElse :: Option f => f a ~> (() -> f a) -> f a
 ```
+</details>
 
 If `orElse` called on `None` calls passed function to get option.<br/>
 If passed function returns not option, `Option.of` used to convert to option.<br/>
