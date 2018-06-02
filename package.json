@@ -1,0 +1,42 @@
+{
+  "name": "@es2/result-option",
+  "version": "0.1.0",
+  "description": "Maybe and Either for your JavaScript project",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint . && nyc ava",
+    "coverage": "NODE_ENV=test nyc report --reporter=text-lcov",
+    "report": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergeysova/es2-result-option.git"
+  },
+  "keywords": [
+    "result",
+    "option",
+    "maybe",
+    "either",
+    "js",
+    "monad"
+  ],
+  "author": "Sergey Sova <mail@sergeysova.com> (https://sergeysova.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sergeysova/es2-result-option/issues"
+  },
+  "homepage": "https://github.com/sergeysova/es2-result-option#readme",
+  "devDependencies": {
+    "@atomix/eslint-config": "^6.4.0",
+    "ava": "^0.25.0",
+    "babel-eslint": "^8.2.3",
+    "coveralls": "^3.0.1",
+    "eslint": "^4.19.1",
+    "flow-bin": "^0.73.0",
+    "nyc": "^12.0.1",
+    "typescript": "^2.9.1"
+  }
+}
