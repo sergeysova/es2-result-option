@@ -64,9 +64,9 @@ export const Ok: Ok
 export type Result = {
   ok: Ok,
   err: Err,
-  of: <T, E>(value: T) => ResultClass<T, E>,
   isResult: <T, E>(result: any) => boolean,
-
+  of: <T, E>(value: T) => ResultClass<T, E>,
+  into: <T, E>(value: T | E) => ResultClass<T, E>,
   encase<A, Rs, Er = Error>(fn: (a: A) => Rs): ((a: A) => ResultClass<Rs, Er>);
   encase<A, B, Rs, Er = Error>(fn: (a: A, b: B) => Rs): ((a: A, b: B) => ResultClass<Rs, Er>);
   encase<A, B, C, Rs, Er = Error>(fn: (a: A, b: B, c: C) => Rs): ((a: A, b: B, c: C) => ResultClass<Rs, Er>);

@@ -316,6 +316,9 @@ const Result = {
   },
   isResult: (instance) => Ok.isOk(instance) || Err.isErr(instance),
   of: Ok.of,
+  into: (value) => value instanceof Error
+    ? Err.of(value)
+    : Ok.of(value),
 }
 
 module.exports = {

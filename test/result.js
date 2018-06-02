@@ -22,6 +22,16 @@ test('Err :: Result f, a => b -> f a b', (t) => {
   t.is(Err(1).unwrapErr(), 1)
 })
 
+test('of :: Result f, a => a -> f a', (t) => {
+  t.is(Result.of, Ok.of)
+})
+
+test('into :: Result f, a => a -> f a', (t) => {
+  t.true(Result.into(new Error('example')).isErr())
+  t.is(Result.into(new Error('example')).unwrapErr().message, 'example')
+  t.is(Result.into('example').unwrap(), 'example')
+})
+
 
 test('isResult :: Result f => f a b -> Boolean', (t) => {
   t.true(Result.isResult(Ok(1)))
