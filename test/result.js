@@ -103,18 +103,24 @@ test('either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r', (t) => {
   t.is(Err(2).either((a) => a + 1, (b) => b + 2), 4)
 })
 
-test('map :: Result f => f a b ~> (a -> q) -> f q', (t) => {
+test('map :: Result f => f a b ~> (a -> r) -> f r', (t) => {
   t.is(Ok(1).map((a) => a + 1).unwrapOr(100), 2)
   t.is(Err(1).map((a) => a + 1).unwrapOr(100), 100)
+  t.is(Err(1).map((a) => a + 1).unwrapErr(), 1)
 })
 
-test('mapErr :: Result f => f a b ~> (b -> z) -> f z', (t) => {
+test('mapErr :: Result f => f a b ~> (b -> r) -> f r', (t) => {
   t.is(Ok(2).mapErr((e) => 3).unwrap(), 2)
   t.is(Err(2).mapErr((e) => 3).unwrapErr(), 3)
   t.is(Ok(2).map((e) => 4).mapErr((e) => 5).unwrap(), 4)
+  t.is(Err(4)
+    .mapErr((e) => e * 2)
+    .mapErr((e) => e - 1)
+    .map((v) => v + 1)
+    .unwrapErr(), 7)
 })
 
-test('bimap :: Result f => f a b ~> (a -> q, b -> z) -> f q z', (t) => {
+test('bimap :: Result f => f a b ~> (a -> q) -> (b -> z) -> f q z', (t) => {
   const foo = (x) => x * x
   const bar = (y) => y + y
 

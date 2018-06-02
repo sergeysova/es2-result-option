@@ -109,8 +109,8 @@ return (await getUser(1))
 - [`Option.encase`](#optionencase)
 - [`Option.wrap`](#optionwrap)
 - [`Option.into`](#optioninto)
-- [`Option.some` and `Some`](#optionsome)
-- [`Option.none` and `None`](#optionnone)
+- [`Option.some` and `Some`](#some)
+- [`Option.none` and `None`](#none)
 - [`isSome` and `Some.isSome`](#issome)
 - [`isNone` and `None.isNone`](#isnone)
 - [`equals`](#equals)
@@ -131,6 +131,40 @@ return (await getUser(1))
 </details>
 
 <details><summary>Result</summary>
+
+- [`Result`](#result)
+- [`Result.of`](#resultof)
+- [`Result.isResult`](#resultisresult)
+- [`Result.into`](#resultinto)
+- [`Result.encase`](#resultencase)
+- [`Ok` and `Result.ok`](#ok)
+- [`Err` and `Result.err`](#err)
+
+- [`isOk`](#isok)
+- [`isErr`](#iserr)
+- [`equals`](#equals-1)
+- [`either`](#either)
+- [`map`](#map-1)
+- [`mapErr`](#maperr)
+- [`bimap`](#bimap)
+- [`chain`](#chain-1)
+- [`chainErr`](#chainerr)
+- [`iter`](#iter-1)
+- [`and`](#and-1)
+- [`andThen`](#andthen-1)
+- [`or`](#or-1)
+- [`orElse`](#orelse-1)
+- [`unwrap`](#unwrap-1)
+- [`unwrapOr`](#unwrapor-1)
+- [`unwrapOrElse`](#unwraporelse-1)
+- [`unwrapErr`](#unwraperr)
+- [`expect`](#expect)
+- [`expectErr`](#expecterr)
+- [`promise`](#promise)
+- [`swap`](#swap)
+- [`extract`](#extract)
+- [`extractErr`](#extracterr)
+
 </details>
 
 <details><summary>Interoperability</summary>
@@ -139,7 +173,7 @@ return (await getUser(1))
 
 ## Option
 
-Package exports `Option` and shortcuts for `Some`, `None`
+Package exports `Option` and shortcuts for `Some`, `None`.
 
 `Option` represents an optional value: every `Option` is either `Some` and contains value, or `None`, and does not. `Option`s have a number of uses:
 - Initial values
@@ -273,15 +307,16 @@ Option.into(null).isNone() === true
 Option.into(None()).isNone() === true
 ```
 
-### Option.some
+### Some
 
 Create some value.
 
-<details><summary><code>Option.some :: Option f => a -> f a</code></summary>
+<details><summary><code>Some :: Option f => a -> f a</code></summary>
 
 ```hs
 Option.some :: Option f => a -> f a
 Some :: Option f => a -> f a
+Some.of :: Option f => a -> f a
 ```
 </details>
 
@@ -291,17 +326,19 @@ Wrap any passed value to `Some`
 Option.some(1)
 Some(2)
 Some(null) /** @see Option.of */
+Some.of(3)
 ```
 
-### Option.none
+### None
 
 Create none value.
 
-<details><summary><code>Option.none :: (Option f, a) => b -> f a</code></summary>
+<details><summary><code>None :: Option f => () -> f a</code></summary>
 
 ```hs
-Option.none :: Option f => b -> f a
-None :: Option f => b -> f a
+Option.none :: Option f => () -> f a
+None :: Option f => () -> f a
+None.of :: Option f => () -> f a
 ```
 </details>
 
@@ -311,6 +348,7 @@ Just return empty `Option` (instance of Some).
 Option.none()
 None()
 Option.none().equals(None()) === true
+None.of()
 ```
 
 ### isSome
@@ -670,4 +708,338 @@ Some(2).orElse(() => Some(1)).unwrap() === 2
 // null || (() => 1)()
 None().orElse(() => Some(1)).unwrap() === 1
 ```
+
+
+### Result
+
+Package exports `Result` and shortcuts for `Some`, `None`.
+
+`Result` is the type used for returning and propagating errors instead of exceptions.<br/>
+`Ok` representing success and containing a value, `Err` representing error and containing an error value.
+
+
+### Result.of
+
+Create result of passed value or error.
+
+<details><summary><code>Result.of :: Result f => a -> f a</code></summary>
+
+```hs
+Result.of :: Result f => a -> f a
+```
+</details>
+
+If passed instance of `Error`, returns `Err`. Otherwise returns `Ok`.
+
+```js
+Result.of(1).isOk() === true
+Result.of(null).isOk() === true
+Result.of(new Error()).isErr() === true
+```
+
+
+### Result.isResult
+
+Check if passed instance of `Result`.
+
+<details><summary><code>Result.isResult :: Result f => f a b -> Boolean</code></summary>
+
+```hs
+Result.isResult :: Result f => f a b -> Boolean
+```
+</details>
+
+If passed `Ok` or `Err` returns `true`. Otherwise returns `false`.
+
+```js
+Result.isResult(Ok(1)) === true
+Result.isResult(Result.err(2)) === true
+Result.isResult(1) === false
+Result.isResult(new Error()) === false
+```
+
+### Result.into
+
+Converts passed value to `Result`.
+
+<details><summary><code>Result.into :: Result f => a -> f a</code></summary>
+
+```hs
+Result.into :: Result f => a -> f a
+```
+</details>
+
+```js
+Result.into(1).isOk() === true
+Result.into(new Error('foo')).isErr() === true
+Result.into(Ok(1)).unwrap() === 1
+Result.into(Err(2)).unwrapErr() === 2
+```
+
+### Result.encase
+
+Wrap function that throws to function that returns `Result`.
+
+<details><summary><code>Result.encase :: Result f => (r -> a) -> (r -> f a b)</code></summary>
+
+```hs
+Result.encase :: Result f => (r -> a) -> (r -> f a b)
+```
+</details>
+
+```js
+const fail = () => {
+  throw new Error('1')
+}
+const safeFail = Result.encase(fail)
+const safe = Result.encase((a, b) => a + b)
+
+safeFail().unwrapErr().message === '1'
+safe(1, 2).unwrap() == 3
+```
+
+### Ok
+
+Create success result value.
+
+<details><summary><code>Ok :: Result f => a -> f a b</code></summary>
+
+```hs
+Ok :: Result f => a -> f a b
+Result.ok :: Result f => a -> f a b
+Ok.of :: Result f => a -> f a b
+```
+</details>
+
+Just wrap passed value to `Ok`.
+
+```js
+Ok(1)
+Result.ok(2)
+Ok.of(3)
+```
+
+### Err
+
+Create fail result value.
+
+<details><summary><code>Err :: Result f => b -> f a b</code></summary>
+
+```hs
+Err :: Result f => b -> f a b
+Result.err :: Result f => b -> f a b
+Err.of :: Result f => b -> f a b
+```
+</details>
+
+Just wrap passed value to `Err`.
+
+```js
+Err(1)
+Result.err(2)
+Err.of(3)
+```
+
+### isOk
+
+Check if passed value is `Ok`.
+
+<details><summary><code>isOk :: Result f => f a b ~> Boolean</code></summary>
+
+```hs
+isOk :: Result f => f a b ~> Boolean
+Ok.isOk :: Result f => f a b -> Boolean
+```
+</details>
+
+If passed `Ok` instance of `Result` returns `true`, otherwise returns `false`.
+
+```js
+Ok(1).isOk() === true
+Ok.isOk(Ok(1)) === true
+Err(2).isOk() === false
+Ok.isOk(Err(2)) === false
+```
+
+### isErr
+
+Check if passed value is `Err`.
+
+<details><summary><code>isErr :: Result f => f a b ~> Boolean</code></summary>
+
+```hs
+isErr :: Result f => f a b ~> Boolean
+Err.isErr :: Result f => f a b -> Boolean
+```
+</details>
+
+If passed `Err` instance of `Result` returns `true`, otherwise returns `false`.
+
+```js
+Err(1).isErr() === true
+Err.isErr(Err(1)) === true
+Ok(2).isErr() === false
+Err.isErr(Ok(2)) === false
+```
+
+### equals
+
+Check if passed result is equals current.
+
+<details><summary><code>equals :: Result f => f ~> f -> Boolean</code></summary>
+
+```hs
+equals :: Result f => f ~> f -> Boolean
+```
+</details>
+
+If passed `Ok` and `Err` returns `false`. Otherwise check inner values with `===`.
+
+```js
+Ok(1).equals(Ok(1)) === true
+Ok(2).equals(Err(2)) === false
+Ok(3).equals(Ok(4)) === false
+```
+
+### either
+
+Transform `Result` to single value.
+
+<details><summary><code>either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r</code></summary>
+
+```hs
+either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r
+```
+</details>
+
+Apply one of two functions depending on contents, unifying their result.<br/>
+If current result is `Ok` then the first function `mapFn` is applied, if it is `Err` then the second function `errFn` is applied.
+
+```js
+const sq = (x) => x * x
+const ng = (x) => -x
+
+Ok(2).either(sq, ng) === 4
+Err(2).either(sq, ng) === -2
+```
+
+### map
+
+Apply function to `Ok` inner value.
+
+<details><summary><code>map :: Result f => f a b ~> (a -> q) -> f q</code></summary>
+
+```hs
+map :: Result f => f a b ~> (a -> q) -> f q
+```
+</details>
+
+If `map` called on `Err` value, returns `Err` with it inner value.
+
+```js
+Ok(3).map((a) => a + a).unwrap() === 6
+Err(5).map((a) => a + a).isErr() === true
+Err(5).map((a) => a + a).unwrapErr() === 5
+Ok(3).map((a) => a + a).map((b) => b - 1).unwrap() === 5
+```
+
+### mapErr
+
+Apply function `Err` inner value.
+
+<details><summary><code>mapErr :: Result f => f a b ~> (b -> r) -> f r</code></summary>
+
+```hs
+mapErr :: Result f => f a b ~> (b -> r) -> f r
+```
+</details>
+
+If `mapErr` called on `Ok` value, returns `Ok` with it inner value.
+
+
+```js
+Ok(2).mapErr((e) => e + 3).unwrap() === 2
+Err(2).mapErr((e) => e + 3).unwrapErr() === 5
+Err(4).mapErr((e) => e * 2).mapErr((e) => e - 1).map((v) => v + 1).unwrapErr() === 7
+```
+
+### bimap
+
+Apply two functions to `Ok` and `Err` inner values.
+
+<details><summary><code>bimap :: Result f => f a b ~> (a -> q) -> (b -> z) -> f q z</code></summary>
+
+```hs
+bimap :: Result f => f a b ~> (a -> q) -> (b -> z) -> f q z
+```
+</details>
+
+
+Sugar for chained `map` and `mapErr` calls.<br/>
+If `bimap` called on `Ok` value then first function applied; if called on `Err` then second function applied.<br/>
+Type of `Result` not changed after `bimap` call.
+
+```js
+const a = (x) => x * x
+const b = (y) => y + y
+
+Ok(4).bimap(a, b).unwrap() === 16
+Err(4).bimap(a, b).unwrapErr() === 8
+
+Ok(4).bimap(a, b)
+// equals
+Ok(4).map(a).mapErr(b)
+```
+
+### chain
+
+
+### chainErr
+
+
+### iter
+
+
+### and
+
+
+### andThen
+
+
+### or
+
+
+### orElse
+
+
+### unwrap
+
+
+### unwrapOr
+
+
+### unwrapOrElse
+
+
+### unwrapErr
+
+
+### expect
+
+
+### expectErr
+
+
+### promise
+
+
+### swap
+
+
+### extract
+
+
+### extractErr
+
+
 
