@@ -576,7 +576,7 @@ None().iter().next().value === undefined
 
 Return passed option if current is `Some`.
 
-<details><summary>and :: Option f => f a ~> f b -> f b<code></code></summary>
+<details><summary><code>and :: Option f => f a ~> f b -> f b</code></summary>
 
 ```hs
 and :: Option f => f a ~> f b -> f b
