@@ -14,9 +14,9 @@ test('no constructor of Option', (t) => {
   t.true(typeof Option === 'object')
 })
 
-test('Option.of :: Option f => a -> f a', (t) => {
-  t.is(Option.of(1).unwrap(), 1)
-  t.is(Option.of(null).isNone(), true)
+test('Option.fromNullable :: Option f => a -> f a', (t) => {
+  t.is(Option.fromNullable(1).unwrap(), 1)
+  t.is(Option.fromNullable(null).isNone(), true)
 })
 
 test('Some :: Option f => a -> f a', (t) => {

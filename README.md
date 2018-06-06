@@ -104,7 +104,7 @@ return (await getUser(1))
 <details><summary>Option</summary>
 
 - [`Option`](#option)
-- [`Option.of` Create option based on value](#optionof)
+- [`Option.fromNullable` Create option based on value](#optionfromnullable)
 - [`Option.isOption`](#optionisoption)
 - [`Option.encase`](#optionencase)
 - [`Option.wrap`](#optionwrap)
@@ -189,24 +189,24 @@ import { Option, Some, None } from '@es2/result-option'
 `Some` and `None` is shortcuts for `Option.some` and `Option.none`.
 
 
-### Option.of
+### Option.fromNullable
 
 Create option of passed value.
 
-<details><summary><code>Option.of :: Option f => a -> f a</code></summary>
+<details><summary><code>Option.fromNullable :: Option f => a -> f a</code></summary>
 
 ```hs
-Option.of :: Option f => a -> f a
+Option.fromNullable :: Option f => a -> f a
 ```
 </details>
 
-`None` returned if passed `null` or `undefined` to `Option.of`, otherwise returns `Some`.
+`None` returned if passed `null` or `undefined` to `Option.fromNullable`, otherwise returns `Some`.
 
 ```js
-Option.of(null).isNone() === true
-Option.of('').isSome() === true
-Option.of([]).isSome() === true
-Option.of(123).isSome() === true
+Option.fromNullable(null).isNone() === true
+Option.fromNullable('').isSome() === true
+Option.fromNullable([]).isSome() === true
+Option.fromNullable(123).isSome() === true
 ```
 
 
@@ -298,7 +298,7 @@ Option.into :: Option f => a -> f a
 </details>
 
 If passed `Option` just returns it.<br/>
-Otherwise wrap result with `Option.of`.
+Otherwise wrap result with `Option.fromNullable`.
 
 ```js
 Option.into(1).isSome() === true
@@ -325,7 +325,7 @@ Wrap any passed value to `Some`
 ```js
 Option.some(1)
 Some(2)
-Some(null) /** @see Option.of */
+Some(null) /** @see Option.fromNullable */
 Some.of(3)
 ```
 
@@ -542,7 +542,7 @@ None().mapOrElse(getDef, incr).unwrap() === 3
 ### chain
 
 Apply function that returns `Option` to value inside `Option`. <br/>
-If passed function returns not option, `Option.of` used to convert to option.
+If passed function returns not option, `Option.fromNullable` used to convert to option.
 
 <details><summary><code>chain :: Option f => f a ~> (a -> f b) -> f b</code></summary>
 
@@ -584,7 +584,7 @@ and :: Option f => f a ~> f b -> f b
 </details>
 
 If `and` called on `None` returns `None`.<br/>
-If passed not option, `Option.of` used to convert to option.<br/>
+If passed not option, `Option.fromNullable` used to convert to option.<br/>
 Otherwise returns passed option.
 
 Like ecmascript type casting in `&&`.
@@ -612,7 +612,7 @@ andThen :: Option f => f a ~> (a -> f b) -> f b
 </details>
 
 If `andThen` called on `None` returns `None`.<br/>
-If passed function returns not option, `Option.of` used to convert to option.<br/>
+If passed function returns not option, `Option.fromNullable` used to convert to option.<br/>
 Otherwise call passed function to get `Option`.
 
 Like ecmascript type casting in `&&`.
@@ -665,7 +665,7 @@ or :: Option f => f a ~> f a -> f a
 </details>
 
 If `or` called on `None` returns passed option. <br/>
-If passed not option, `Option.of` used to convert to option.<br/>
+If passed not option, `Option.fromNullable` used to convert to option.<br/>
 Otherwise return `Some` with current value.
 
 Like ecmascript type casting in `||`.
@@ -696,7 +696,7 @@ orElse :: Option f => f a ~> (() -> f a) -> f a
 </details>
 
 If `orElse` called on `None` calls passed function to get option.<br/>
-If passed function returns not option, `Option.of` used to convert to option.<br/>
+If passed function returns not option, `Option.fromNullable` used to convert to option.<br/>
 Otherwise return `Some` with current value.
 
 Like ecmascript type casting in `||`.

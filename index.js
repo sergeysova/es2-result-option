@@ -26,11 +26,11 @@ function Some(data) {
     // eslint-disable-next-line no-unused-vars
     unwrapOrElse: (fn) => data,
 
-    map: (fn) => Option.of(fn(data)),
+    map: (fn) => Option.fromNullable(fn(data)),
 
-    mapOr: (value, fn) => Option.of(fn(data)),
+    mapOr: (value, fn) => Option.fromNullable(fn(data)),
 
-    mapOrElse: (defFn, mapFn) => Option.of(mapFn(data)),
+    mapOrElse: (defFn, mapFn) => Option.fromNullable(mapFn(data)),
 
     chain: (optionFn) => Option.into(optionFn(data)),
 
@@ -46,7 +46,7 @@ function Some(data) {
 
     and: (optionB) => Option.isOption(optionB)
       ? optionB
-      : Option.of(optionB),
+      : Option.fromNullable(optionB),
 
     andThen: (fn) => Option.into(fn(data)),
 
@@ -87,10 +87,10 @@ function None() {
     map: (fn) => None(),
 
     // eslint-disable-next-line no-unused-vars
-    mapOr: (value, fn) => Option.of(value),
+    mapOr: (value, fn) => Option.fromNullable(value),
 
     // eslint-disable-next-line no-unused-vars
-    mapOrElse: (defFn, mapFn) => Option.of(defFn()),
+    mapOrElse: (defFn, mapFn) => Option.fromNullable(defFn()),
 
     // eslint-disable-next-line no-unused-vars
     chain: (optionFn) => None(),
@@ -113,7 +113,7 @@ function None() {
 
     or: (optionB) => Option.isOption(optionB)
       ? optionB
-      : Option.of(optionB),
+      : Option.fromNullable(optionB),
 
     orElse: (optionFn) => Option.into(optionFn()),
   }
@@ -126,7 +126,7 @@ const Option = {
   some: Some,
   none: None,
   isOption: (instance) => Some.isSome(instance) || None.isNone(instance),
-  of: (value) => (value === null || typeof value === 'undefined')
+  fromNullable: (value) => (value === null || typeof value === 'undefined')
     ? None()
     : Some(value),
   encase: (fn) => (...args) => {
@@ -153,7 +153,7 @@ const Option = {
   },
   into: (value) => Option.isOption(value)
     ? value
-    : Option.of(value),
+    : Option.fromNullable(value),
 }
 
 
