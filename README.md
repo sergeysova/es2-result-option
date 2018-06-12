@@ -1,4 +1,4 @@
-# @es2/result-option [![Maintainability](https://api.codeclimate.com/v1/badges/1448aef0f57513e42c0c/maintainability)](https://codeclimate.com/github/sergeysova/es2-result-option.js/maintainability) [![Build Status](https://travis-ci.org/sergeysova/es2-result-option.js.svg?branch=master)](https://travis-ci.org/sergeysova/es2-result-option.js) [![Coverage Status](https://coveralls.io/repos/github/sergeysova/es2-result-option.js/badge.svg?branch=master)](https://coveralls.io/github/sergeysova/es2-result-option.js?branch=master)
+# @es2/result-option [![Maintainability](https://api.codeclimate.com/v1/badges/1448aef0f57513e42c0c/maintainability)](https://codeclimate.com/github/sergeysova/es2-result-option/maintainability) [![Build Status](https://travis-ci.org/sergeysova/es2-result-option.svg?branch=master)](https://travis-ci.org/sergeysova/es2-result-option) [![Coverage Status](https://coveralls.io/repos/github/sergeysova/es2-result-option/badge.svg?branch=master)](https://coveralls.io/github/sergeysova/es2-result-option?branch=master)
 
 ## Readme
 
