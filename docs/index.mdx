@@ -1,0 +1,33 @@
+---
+name: Getting started
+route: /
+order: 100
+---
+
+# `Result` + `Option`
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/1448aef0f57513e42c0c/maintainability)](https://codeclimate.com/github/sergeysova/es2-result-option.js/maintainability) [![Build Status](https://travis-ci.org/sergeysova/es2-result-option.js.svg?branch=master)](https://travis-ci.org/sergeysova/es2-result-option.js) [![Coverage Status](https://coveralls.io/repos/github/sergeysova/es2-result-option.js/badge.svg?branch=master)](https://coveralls.io/github/sergeysova/es2-result-option.js?branch=master)
+
+## Installation
+
+```bash
+npm install @es2/result-option
+```
+
+
+## Usage
+
+```js
+const { Option, Some, None, Result, Ok, Err } = require('@es2/result-option')
+// or
+import { Option, Some, None, Result, Ok, Err } from '@es2/result-option'
+```
+
+### Typescript
+
+
+```js
+import { Ok, ResultClass } from '@es2/result-option'
+
+const ResultClass<number, string> = Ok(12)
+```
