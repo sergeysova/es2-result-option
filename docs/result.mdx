@@ -6,7 +6,7 @@ order: 5
 
 # `Result`
 
-Package exports `Result` and shortcuts for `Some`, `None`.
+Package exports `Result` and `Ok`, `Err`.
 
 `Result` is the type used for returning and propagating errors instead of exceptions.<br/>
 `Ok` representing success and containing a value, `Err` representing error and containing an error value.
@@ -25,6 +25,8 @@ import { Result, Ok, Err } from '@es2/result-option'
 - [`Result.encase`](#resultencase)
 - [`Ok` and `Result.ok`](#ok)
 - [`Err` and `Result.err`](#err)
+
+### Instance
 
 - [`isOk`](#isok)
 - [`isErr`](#iserr)
@@ -55,12 +57,10 @@ import { Result, Ok, Err } from '@es2/result-option'
 
 Create result of passed value or error.
 
-<details><summary><code>Result.of :: Result f => a -> f a</code></summary>
 
 ```hs
 Result.of :: Result f => a -> f a
 ```
-</details>
 
 If passed instance of `Error`, returns `Err`. Otherwise returns `Ok`.
 
@@ -75,12 +75,10 @@ Result.of(new Error()).isErr() === true
 
 Check if passed instance of `Result`.
 
-<details><summary><code>Result.isResult :: Result f => f a b -> Boolean</code></summary>
 
 ```hs
 Result.isResult :: Result f => f a b -> Boolean
 ```
-</details>
 
 If passed `Ok` or `Err` returns `true`. Otherwise returns `false`.
 
@@ -95,12 +93,10 @@ Result.isResult(new Error()) === false
 
 Converts passed value to `Result`.
 
-<details><summary><code>Result.into :: Result f => a -> f a</code></summary>
 
 ```hs
 Result.into :: Result f => a -> f a
 ```
-</details>
 
 ```js
 Result.into(1).isOk() === true
@@ -113,12 +109,10 @@ Result.into(Err(2)).unwrapErr() === 2
 
 Wrap function that throws to function that returns `Result`.
 
-<details><summary><code>Result.encase :: Result f => (r -> a) -> (r -> f a b)</code></summary>
 
 ```hs
 Result.encase :: Result f => (r -> a) -> (r -> f a b)
 ```
-</details>
 
 ```js
 const fail = () => {
@@ -135,14 +129,12 @@ safe(1, 2).unwrap() == 3
 
 Create success result value.
 
-<details><summary><code>Ok :: Result f => a -> f a b</code></summary>
 
 ```hs
 Ok :: Result f => a -> f a b
 Result.ok :: Result f => a -> f a b
 Ok.of :: Result f => a -> f a b
 ```
-</details>
 
 Just wrap passed value to `Ok`.
 
@@ -156,14 +148,12 @@ Ok.of(3)
 
 Create fail result value.
 
-<details><summary><code>Err :: Result f => b -> f a b</code></summary>
 
 ```hs
 Err :: Result f => b -> f a b
 Result.err :: Result f => b -> f a b
 Err.of :: Result f => b -> f a b
 ```
-</details>
 
 Just wrap passed value to `Err`.
 
@@ -177,13 +167,11 @@ Err.of(3)
 
 Check if passed value is `Ok`.
 
-<details><summary><code>isOk :: Result f => f a b ~> Boolean</code></summary>
 
 ```hs
 isOk :: Result f => f a b ~> Boolean
 Ok.isOk :: Result f => f a b -> Boolean
 ```
-</details>
 
 If passed `Ok` instance of `Result` returns `true`, otherwise returns `false`.
 
@@ -198,13 +186,11 @@ Ok.isOk(Err(2)) === false
 
 Check if passed value is `Err`.
 
-<details><summary><code>isErr :: Result f => f a b ~> Boolean</code></summary>
 
 ```hs
 isErr :: Result f => f a b ~> Boolean
 Err.isErr :: Result f => f a b -> Boolean
 ```
-</details>
 
 If passed `Err` instance of `Result` returns `true`, otherwise returns `false`.
 
@@ -219,12 +205,10 @@ Err.isErr(Ok(2)) === false
 
 Check if passed result is equals current.
 
-<details><summary><code>equals :: Result f => f ~> f -> Boolean</code></summary>
 
 ```hs
 equals :: Result f => f ~> f -> Boolean
 ```
-</details>
 
 If passed `Ok` and `Err` returns `false`. Otherwise check inner values with `===`.
 
@@ -238,12 +222,10 @@ Ok(3).equals(Ok(4)) === false
 
 Transform `Result` to single value.
 
-<details><summary><code>either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r</code></summary>
 
 ```hs
 either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r
 ```
-</details>
 
 Apply one of two functions depending on contents, unifying their result.<br/>
 If current result is `Ok` then the first function `mapFn` is applied, if it is `Err` then the second function `errFn` is applied.
@@ -260,12 +242,10 @@ Err(2).either(sq, ng) === -2
 
 Apply function to `Ok` inner value.
 
-<details><summary><code>map :: Result f => f a b ~> (a -> q) -> f q</code></summary>
 
 ```hs
 map :: Result f => f a b ~> (a -> q) -> f q
 ```
-</details>
 
 If `map` called on `Err` value, returns `Err` with it inner value.
 
@@ -280,12 +260,10 @@ Ok(3).map((a) => a + a).map((b) => b - 1).unwrap() === 5
 
 Apply function `Err` inner value.
 
-<details><summary><code>mapErr :: Result f => f a b ~> (b -> r) -> f r</code></summary>
 
 ```hs
 mapErr :: Result f => f a b ~> (b -> r) -> f r
 ```
-</details>
 
 If `mapErr` called on `Ok` value, returns `Ok` with it inner value.
 
@@ -300,12 +278,10 @@ Err(4).mapErr((e) => e * 2).mapErr((e) => e - 1).map((v) => v + 1).unwrapErr() =
 
 Apply two functions to `Ok` and `Err` inner values.
 
-<details><summary><code>bimap :: Result f => f a b ~> (a -> q) -> (b -> z) -> f q z</code></summary>
 
 ```hs
 bimap :: Result f => f a b ~> (a -> q) -> (b -> z) -> f q z
 ```
-</details>
 
 
 Sugar for chained `map` and `mapErr` calls.<br/>

@@ -6,7 +6,7 @@ order: 5
 
 # `Option`
 
-Package exports `Option` and shortcuts for `Some`, `None`.
+Package exports `Option` and `Some`, `None`.
 
 `Option` represents an optional value: every `Option` is either `Some` and contains value, or `None`, and does not. `Option`s have a number of uses:
 - Initial values
@@ -28,10 +28,13 @@ import { Option, Some, None } from '@es2/result-option'
 - [`Option.encase`](#optionencase)
 - [`Option.wrap`](#optionwrap)
 - [`Option.into`](#optioninto)
-- [`Option.some` and `Some`](#some)
-- [`Option.none` and `None`](#none)
-- [`isSome` and `Some.isSome`](#issome)
-- [`isNone` and `None.isNone`](#isnone)
+- [`Some` and `Option.some`](#some)
+- [`None` and `Option.none`](#none)
+
+### Instance
+
+- [`isSome`](#issome)
+- [`isNone`](#isnone)
 - [`equals`](#equals)
 - [`unwrap`](#unwrap)
 - [`unwrapOr`](#unwrapor)
