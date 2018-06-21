@@ -6,27 +6,23 @@ import { Option, Some, None } from '../index'
 
 
 test('exported Some and None is equal Option static props', (t) => {
-  t.is(None, Option.none)
-  t.is(Some, Option.some)
+  t.is(None.of, Option.none)
+  t.is(Some.of, Option.some)
 })
 
 test('no constructor of Option', (t) => {
   t.true(typeof Option === 'object')
 })
 
-test('Option.fromNullable :: Option f => a -> f a', (t) => {
-  t.is(Option.fromNullable(1).unwrap(), 1)
-  t.is(Option.fromNullable(null).isNone(), true)
-})
-
-test('Some :: Option f => a -> f a', (t) => {
-  t.is(Option.some(1).unwrap(), 1)
-  t.is(Some(1).unwrap(), 1)
+test('some :: Option f => a -> f a', (t) => {
+  t.is(Option.some(1).extractOr(5), 1)
+  t.is(Some.of(1).extractOr(5), 1)
+  t.true(Some.of(1).isSome())
 })
 
 test('None :: Option f, a => b -> f a', (t) => {
   t.true(Option.none().isNone())
-  t.true(None().isNone())
+  t.true(None.of().isNone())
 })
 
 test('Option.isOption :: Option f => f a -> Boolean', (t) => {

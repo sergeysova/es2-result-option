@@ -1,340 +1,462 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable id-match, no-use-before-define */
 
-const symbolSome = Symbol('Option::Some')
-const symbolNone = Symbol('Option::None')
-const symbolOk = Symbol('Result::Ok')
-const symbolErr = Symbol('Result::Err')
+const ø = Symbol('ø')
 
 
-class OptionException extends Error { }
+function isNullable(value) {
+  return value === null || typeof value === 'undefined' || Number.isNaN(value)
+}
 
-function Some(data) {
-  return {
-    [symbolSome]: true,
+class Some {
+  constructor(value) {
+    this[ø] = value
+  }
 
-    isSome: () => true,
+  static of(value) {
+    return new Some(value)
+  }
 
-    isNone: () => false,
+  static zero() {
+    return new None()
+  }
 
-    equals: (result) => Some.isSome(result) && result.unwrap() === data,
+  map(ƒ) {
+    return Some.of(ƒ(this[ø]))
+  }
 
-    unwrap: () => data,
+  ap(option) {
+    return option.chain((ƒ) => this.map(ƒ))
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    unwrapOr: (value) => data,
+  chain(ƒ) {
+    return ƒ(this[ø])
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    unwrapOrElse: (fn) => data,
+  equals(option) {
+    return option.map((value) => value === this[ø]).extractOr(false)
+  }
 
-    map: (fn) => Option.fromNullable(fn(data)),
+  filter(ƒ) {
+    return this.chain((value) => ƒ(value) ? Some.of(value) : Some.zero())
+  }
 
-    mapOr: (value, fn) => Option.fromNullable(fn(data)),
+  alt(option) {
+    return option
+  }
 
-    mapOrElse: (defFn, mapFn) => Option.fromNullable(mapFn(data)),
+  extend(ƒ) {
+    return Some.of(ƒ(this[ø]))
+  }
 
-    chain: (optionFn) => Option.into(optionFn(data)),
 
-    // eslint-disable-next-line no-unused-vars
-    okOr: (resultErr) => Ok(data),
+  mapOr(value, ƒ) {
+    return this.map(ƒ)
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    okOrElse: (resultErrFn) => Ok(data),
+  mapOrElse(defaultƒ, mapƒ) {
+    return this.map(mapƒ)
+  }
 
-    * iter() {
-      yield data
-    },
+  or(/* option */) {
+    return this
+  }
 
-    and: (optionB) => Option.isOption(optionB)
-      ? optionB
-      : Option.fromNullable(optionB),
+  orElse(/* optionƒ */) {
+    return this
+  }
 
-    andThen: (fn) => Option.into(fn(data)),
+  extractOr(/* defaultValue */) {
+    return this[ø]
+  }
 
-    filter: (predicateFn) => predicateFn(data)
-      ? Some(data)
-      : None(),
+  extractOrElse(/* defaultƒ */) {
+    return this[ø]
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    or: (optionB) => Some(data),
+  * iter() {
+    yield this[ø]
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    orElse: (optionFn) => Some(data),
+  isSome() {
+    return true
+  }
+
+  isNone() {
+    return false
+  }
+
+  okOr(/* err */) {
+    return Ok.of(this[ø])
+  }
+
+  okOrElse(/* errƒ */) {
+    return Ok.of(this[ø])
+  }
+
+  transpose() {
+    return isNullable(this[ø])
+      ? None.of()
+      : this
   }
 }
 
-Some.isSome = (instance) => instance[symbolSome] === true
-Some.of = Some
+class None {
+  static of(/* value */) {
+    return new None()
+  }
 
-function None() {
-  return {
-    [symbolNone]: true,
+  static zero() {
+    return new None()
+  }
 
-    isSome: () => false,
+  map(/* ƒ */) {
+    return None.of()
+  }
 
-    isNone: () => true,
+  ap(/* option */) {
+    return None.of()
+  }
 
-    equals: (result) => None.isNone(result),
+  chain(/* ƒ */) {
+    return None.of()
+  }
 
-    unwrap: () => {
-      throw new OptionException('unwrap() called on None value')
-    },
+  equals(option) {
+    return option.map(() => false).extractOr(true)
+  }
 
-    unwrapOr: (value) => value,
+  filter(/* ƒ */) {
+    return None.of()
+  }
 
-    unwrapOrElse: (fn) => fn(),
+  alt(/* option */) {
+    return None.of()
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    map: (fn) => None(),
+  extend(/* ƒ */) {
+    return None.of()
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    mapOr: (value, fn) => Option.fromNullable(value),
 
-    // eslint-disable-next-line no-unused-vars
-    mapOrElse: (defFn, mapFn) => Option.fromNullable(defFn()),
+  mapOr(value /* ƒ */) {
+    return Some.of(value)
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    chain: (optionFn) => None(),
+  mapOrElse(defaultƒ /* mapƒ */) {
+    return Some.of(defaultƒ())
+  }
 
-    okOr: (resultErr) => Err(resultErr),
+  or(option) {
+    return option
+  }
 
-    okOrElse: (resultErrFn) => Err(resultErrFn()),
+  orElse(optionƒ) {
+    return optionƒ()
+  }
 
-    // eslint-disable-next-line no-empty-function
-    * iter() { },
+  extractOr(defaultValue) {
+    return defaultValue
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    and: (optionB) => None(),
+  extractOrElse(defaultƒ) {
+    return defaultƒ()
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    andThen: (fn) => None(),
+  * iter() {
+    // nothing yields
+  }
 
-    // eslint-disable-next-line no-unused-vars
-    filter: (predicateFn) => None(),
+  isSome() {
+    return false
+  }
 
-    or: (optionB) => Option.isOption(optionB)
-      ? optionB
-      : Option.fromNullable(optionB),
+  isNone() {
+    return true
+  }
 
-    orElse: (optionFn) => Option.into(optionFn()),
+  okOr(errValue) {
+    return Err.of(errValue)
+  }
+
+  okOrElse(errƒ) {
+    return Err.of(errƒ())
+  }
+
+  transpose() {
+    return this
   }
 }
 
-None.isNone = (instance) => instance[symbolNone] === true
-None.of = None
+function option$is(value) {
+  return value instanceof Some || value instanceof None
+}
+
+function option$into(value) {
+  return isNullable(value)
+    ? None.of()
+    : Some.of(value)
+}
+
+function option$encase(ƒ) {
+  return function encased(...args) {
+    try {
+      return Some.of(ƒ.apply(this, args))
+    }
+    catch (error) {
+      return None.of()
+    }
+  }
+}
 
 const Option = {
-  some: Some,
-  none: None,
-  isOption: (instance) => Some.isSome(instance) || None.isNone(instance),
-  fromNullable: (value) => (value === null || typeof value === 'undefined')
-    ? None()
-    : Some(value),
-  encase: (fn) => (...args) => {
+  some: Some.of,
+  none: None.of,
+  is: option$is,
+  into: option$into,
+  encase: option$encase,
+}
+
+
+class Ok {
+  static of(value) {
+    return new Ok(value)
+  }
+
+  constructor(value) {
+    this[ø] = value
+  }
+
+  map(okƒ) {
+    return Ok.of(okƒ(this[ø]))
+  }
+
+  mapOr(value, okƒ) {
+    return this.map(okƒ)
+  }
+
+  mapOrElse(defaultƒ, mapƒ) {
+    return this.map(mapƒ)
+  }
+
+  mapErr(/* errƒ */) {
+    return this
+  }
+
+  mapErrOr(value /* errƒ */) {
+    return Err.of(value)
+  }
+
+  mapErrOrElse(defaultƒ /* errƒ */) {
+    return Err.of(defaultƒ())
+  }
+
+  chain(okƒ) {
+    return okƒ(this[ø])
+  }
+
+  chainErr(/* æƒ */) {
+    return this
+  }
+
+  ap(result) {
+    return result.chain((ƒ) => this.map(ƒ))
+  }
+
+  apErr(/* result */) {
+    return this
+  }
+
+  equals(result) {
+    return result.map((value) => value === this[ø]).extractOr(false)
+  }
+
+  extractOr(/* defaultValue */) {
+    return this[ø]
+  }
+
+  extractErrOr(defaultValue) {
+    return defaultValue
+  }
+
+  * iter() {
+    yield this[ø]
+  }
+
+  * iterErr() {
+    yield this[ø]
+  }
+
+  swap() {
+    return Err.of(this[ø])
+  }
+
+  promise() {
+    return Promise.resolve(this[ø])
+  }
+
+  either(okƒ /* errƒ */) {
+    return okƒ(this[ø])
+  }
+
+  bimap(okƒ /* errƒ */) {
+    return this.map(okƒ)
+  }
+
+  isOk() {
+    return true
+  }
+
+  isErr() {
+    return false
+  }
+
+  ok() {
+    return Some.of(this[ø])
+  }
+
+  err() {
+    return None.of()
+  }
+}
+
+
+class Err {
+  static of(value) {
+    return new Err(value)
+  }
+
+  constructor(value) {
+    this[ø] = value
+  }
+
+  map(/* okƒ */) {
+    return this
+  }
+
+  mapOr(value /* okƒ */) {
+    return Ok.of(value)
+  }
+
+  mapOrElse(defaultƒ /* okƒ */) {
+    return Ok.of(defaultƒ())
+  }
+
+  mapErr(errƒ) {
+    return Err.of(errƒ(this[ø]))
+  }
+
+  mapErrOr(value, errƒ) {
+    return this.mapErr(errƒ)
+  }
+
+  mapErrOrElse(defaultƒ, errƒ) {
+    return this.mapErr(errƒ)
+  }
+
+  chain(/* okƒ */) {
+    return this
+  }
+
+  chainErr(errƒ) {
+    return errƒ(this[ø])
+  }
+
+  ap(/* result */) {
+    return this
+  }
+
+  apErr(result) {
+    return result.chain((ƒ) => this.mapErr(ƒ))
+  }
+
+  equals(result) {
+    return result.mapErr((value) => value === this[ø]).extractErrOr(false)
+  }
+
+  extractOr(defaultValue) {
+    return defaultValue
+  }
+
+  extractErrOr(/* defaultValue */) {
+    return this[ø]
+  }
+
+  * iter() {
+    // nothing yields
+  }
+
+  * iterErr() {
+    yield this[ø]
+  }
+
+  swap() {
+    return Ok.of(this[ø])
+  }
+
+  promise() {
+    return Promise.reject(this[ø])
+  }
+
+  either(okƒ, errƒ) {
+    return errƒ(this[ø])
+  }
+
+  bimap(okƒ, errƒ) {
+    return this.mapErr(errƒ)
+  }
+
+  isOk() {
+    return false
+  }
+
+  isErr() {
+    return true
+  }
+
+  ok() {
+    return None.of()
+  }
+
+  err() {
+    return Some.of(this[ø])
+  }
+}
+
+function result$is(value) {
+  return value instanceof Ok || value instanceof Err
+}
+
+function result$encase(ƒ) {
+  return function encased(...args) {
     try {
-      return Some(fn(...args))
+      return Ok.of(ƒ.apply(this, args))
     }
     catch (error) {
-      return None()
+      return Err.of(error)
     }
-  },
-  wrap: (fn) => (...args) => {
-    try {
-      const result = fn(...args)
+  }
+}
 
-      if (typeof result === 'undefined' || result === null || Number.isNaN(result)) {
-        return None()
-      }
-
-      return Some(result)
-    }
-    catch (error) {
-      return None()
-    }
-  },
-  into: (value) => Option.isOption(value)
+function result$into(value) {
+  return result$is(value)
     ? value
-    : Option.fromNullable(value),
+    : Ok.of(value)
 }
-
-
-class ResultException extends Error { }
-
-function Ok(data) {
-  return {
-    [symbolOk]: true,
-
-    isOk: () => true,
-
-    isErr: () => false,
-
-    equals: (result) => Ok.isOk(result) && result.unwrap() === data,
-
-    // eslint-disable-next-line no-unused-vars
-    either: (mapFn, errFn) => mapFn(data),
-
-    map: (fn) => Ok(fn(data)),
-
-    // eslint-disable-next-line no-unused-vars
-    mapErr: (fn) => Ok(data),
-
-    // eslint-disable-next-line no-unused-vars
-    bimap: (f, g) => Ok(f(data)),
-
-    chain: (fn) => Result.into(fn(data)),
-
-    // eslint-disable-next-line no-unused-vars
-    chainErr: (fn) => Ok(data),
-
-    * iter() {
-      yield data
-    },
-
-    and: (result) => Result.into(result),
-
-    andThen: (fn) => Result.into(fn(data)),
-
-    // eslint-disable-next-line no-unused-vars
-    or: (result) => Ok(data),
-
-    // eslint-disable-next-line no-unused-vars
-    orElse: (fn) => Ok(data),
-
-    unwrap: () => data,
-
-    // eslint-disable-next-line no-unused-vars
-    unwrapOr: (value) => data,
-
-    // eslint-disable-next-line no-unused-vars
-    unwrapOrElse: (fn) => data,
-
-    unwrapErr: () => {
-      throw new ResultException(data)
-    },
-
-    // eslint-disable-next-line no-unused-vars
-    expect: (msg) => data,
-
-    expectErr: (msg) => {
-      throw new ResultException(`${msg}: ${data}`)
-    },
-
-    promise: () => Promise.resolve(data),
-
-    swap: () => Err(data),
-
-    extract: () => [data],
-
-    extractErr: () => [],
-
-    ok: () => Some(data),
-
-    err: () => None(),
-  }
-}
-
-Ok.isOk = (instance) => instance[symbolOk] === true
-Ok.of = Ok
-
-function Err(error) {
-  return {
-    [symbolErr]: true,
-
-    isOk: () => false,
-
-    isErr: () => true,
-
-    equals: (result) => Err.isErr(result) && result.unwrapErr() === error,
-
-    either: (okFn, errFn) => errFn(error),
-
-    // eslint-disable-next-line no-unused-vars
-    map: (fn) => Err(error),
-
-    mapErr: (fn) => Err(fn(error)),
-
-    // eslint-disable-next-line no-unused-vars
-    bimap: (f, g) => Err(g(error)),
-
-    // eslint-disable-next-line no-unused-vars
-    chain: (fn) => Err(error),
-
-    chainErr: (fn) => Result.into(fn(error)),
-
-    // eslint-disable-next-line no-empty-function
-    * iter() {
-    },
-
-    // eslint-disable-next-line no-unused-vars
-    and: (result) => Err(error),
-
-    // eslint-disable-next-line no-unused-vars
-    andThen: (fn) => Err(error),
-
-    or: (result) => Result.into(result),
-
-    orElse: (fn) => Result.into(fn(error)),
-
-    unwrap: () => {
-      throw error
-    },
-
-    unwrapOr: (value) => value,
-
-    unwrapOrElse: (fn) => fn(error),
-
-    unwrapErr: () => error,
-
-    expect: (msg) => {
-      throw new ResultException(msg)
-    },
-
-    // eslint-disable-next-line no-unused-vars
-    expectErr: (msg) => error,
-
-    promise: () => Promise.reject(error),
-
-    swap: () => Ok(error),
-
-    extract: () => [],
-
-    extractErr: () => [error],
-
-    ok: () => None(),
-
-    err: () => Some(error),
-  }
-}
-
-Err.isErr = (instance) => instance[symbolErr] === true
-Err.of = Err
 
 const Result = {
-  ok: Ok,
-  err: Err,
-  of: (value) => value instanceof Error
-    ? Err.of(value)
-    : Ok.of(value),
-  into: (value) => Result.isResult(value)
-    ? value
-    : Result.of(value),
-  encase: (fn) => (...args) => {
-    try {
-      return Ok(fn(...args))
-    }
-    catch (error) {
-      return Err(error)
-    }
-  },
-  isResult: (instance) => Ok.isOk(instance) || Err.isErr(instance),
+  ok: Ok.of,
+  err: Err.of,
+  is: result$is,
+  into: result$into,
+  encase: result$encase,
 }
 
 module.exports = {
   Some,
   None,
   Option,
-  OptionException,
+
   Ok,
   Err,
   Result,
-  ResultException,
 }
