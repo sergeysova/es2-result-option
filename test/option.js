@@ -279,3 +279,7 @@ test('.mapOrElse', (t) => {
   t.deepEqual(u.mapOrElse(d, (a) => a), u, 'identity')
   t.deepEqual(u.mapOrElse(d, (x) => f(g(x))), u.mapOrElse(d, g).mapOrElse(d, f), 'composition')
 })
+
+test.todo('Option.or')
+
+test.todo('Option.orElse')
