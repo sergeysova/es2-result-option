@@ -74,7 +74,9 @@ declare class OptionClass<A> {
 }
 
 export class Some<A> extends OptionClass<A> {}
-export class None<A> extends OptionClass<A> {}
+export class None<A> extends OptionClass<A> {
+  static of<S>(): OptionClass<S>;
+}
 
 type Option = {
   some: <T>(value: T) => OptionClass<T>,
