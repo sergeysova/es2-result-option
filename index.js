@@ -16,10 +16,6 @@ class Some {
     return new Some(value)
   }
 
-  static zero() {
-    return new None()
-  }
-
   map(ƒ) {
     return Some.of(ƒ(this[ø]))
   }
@@ -102,10 +98,6 @@ class Some {
 
 class None {
   static of(/* value */) {
-    return new None()
-  }
-
-  static zero() {
     return new None()
   }
 

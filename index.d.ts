@@ -52,7 +52,6 @@ export const Result: Result
 
 declare class OptionClass<A> {
   static of<S>(value: S): OptionClass<S>;
-  static zero<S>(): OptionClass<S>;
   constructor(value: A);
 
   alt(option: OptionClass<A>): OptionClass<A>;
