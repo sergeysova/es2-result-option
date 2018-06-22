@@ -67,6 +67,10 @@ Some.prototype = {
     return option
   },
 
+  andThen(optionƒ) {
+    return optionƒ()
+  },
+
   extractOr(/* defaultValue */) {
     return this[ø]
   },
@@ -156,6 +160,10 @@ None.prototype = {
   },
 
   and(/* option */) {
+    return this
+  },
+
+  andThen(/* optionƒ */) {
     return this
   },
 
