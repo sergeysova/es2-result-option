@@ -36,8 +36,8 @@ class Some {
     return this.chain((value) => ƒ(value) ? Some.of(value) : Some.zero())
   }
 
-  alt(option) {
-    return option
+  alt(/* option */) {
+    return this
   }
 
   extend(ƒ) {
@@ -121,8 +121,8 @@ class None {
     return None.of()
   }
 
-  alt(/* option */) {
-    return None.of()
+  alt(option) {
+    return option
   }
 
   extend(/* ƒ */) {
