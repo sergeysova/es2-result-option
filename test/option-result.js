@@ -4,18 +4,20 @@ import test from 'ava'
 
 import { Option, Some, None, Ok, Err } from '../index'
 
+// okOr :: Option f, Result t => f a ~> b -> t a b
+test('Option..okOr', (t) => {
+  t.deepEqual(Some.of(2).okOr('foo'), Ok.of(2))
+  t.deepEqual(Option.zero().okOr('foo'), Err.of('foo'))
+})
 
-test.todo('Option.okOr')
-test.todo('Option.okOrElse')
-test.todo('Option.or')
-test.todo('Option.orElse')
+// okOrElse :: Option f, Result t => f a ~> (() -> b) -> t a b
+test('Option..okOrElse', (t) => {
+  const d = () => 5
 
-// test('okOr :: (Option f, Result t) => f a ~> b -> t a b', (t) => {
-//   t.true(Some(2).okOr('foo').isOk())
-//   t.is(Some(2).okOr('foo').unwrap(), 2)
-//   t.true(None().okOr('foo').isErr())
-//   t.is(None().okOr('foo').unwrapErr(), 'foo')
-// })
+  t.deepEqual(Some.of(2).okOrElse(d), Ok.of(2))
+  t.deepEqual(Option.zero().okOrElse(d), Err.of(5))
+})
+
 
 // test('okOrElse :: (Option f, Result t) => f a ~> (() -> b) -> t a b', (t) => {
 //   const get = () => 5
