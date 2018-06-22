@@ -1,7 +1,6 @@
 
 declare class ResultClass<A, X> {
   static of<B, Z>(value: B): ResultClass<B, Z>;
-  constructor(value: A);
 
   ap<B>(result: ResultClass<((value: A) => B), X>): ResultClass<B, X>;
   apErr<Z>(result: ResultClass<A, ((value: X) => Z)>): ResultClass<A, Z>;
@@ -52,7 +51,6 @@ export const Result: Result
 
 declare class OptionClass<A> {
   static of<S>(value: S): OptionClass<S>;
-  constructor(value: A);
 
   alt(option: OptionClass<A>): OptionClass<A>;
   ap<B>(option: OptionClass<((value: A) => B)>): OptionClass<B>;
