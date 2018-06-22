@@ -36,7 +36,7 @@ test('.alt', (t) => {
   const a = Some.of('a')
   const b = Some.of('b')
   const c = Some.of('c')
-  const d = None()
+  const d = Option.none()
   const ƒ = (f) => `${f}!`
 
   t.is(a.alt(b).alt(c), a.alt(b.alt(c)), 'associativity')
@@ -48,22 +48,22 @@ test('.alt', (t) => {
 
 // ap :: Apply f => f a ~> f (a -> b) -> f b
 test('.ap', (t) => {
-  const a = Some(1)
-  const b = Some((value) => value + 1)
-  const c = Some((value) => value * 2)
+  const a = Some.of(1)
+  const b = Some.of((value) => value + 1)
+  const c = Some.of((value) => value * 2)
 
-  t.deepEqual(a.ap(b), Some(2), 'ap must apply the function in Apply b to the value in Apply a')
-  t.deepEqual(a.ap(b).ap(c), Some(4))
-  t.deepEqual(None().ap(b).ap(c), None())
+  t.deepEqual(a.ap(b), Some.of(2), 'ap must apply the function in Apply b to the value in Apply a')
+  t.deepEqual(a.ap(b).ap(c), Some.of(4))
+  t.deepEqual(Option.none().ap(b).ap(c), Option.none())
 
   t.deepEqual(a.ap(b).ap(c), a.ap(b.ap(c.map((f) => (g) => (x) => f(g(x))))), 'composition')
 })
 
 // chain :: Chain m => m a ~> (a -> m b) -> m b
 test('.chain', (t) => {
-  const m = Some(1)
-  const f = (v) => Some(v + 1)
-  const g = (v) => Some(v * 2)
+  const m = Some.of(1)
+  const f = (v) => Some.of(v + 1)
+  const g = (v) => Some.of(v * 2)
 
   t.deepEqual(m.chain(f), Some(2), 'chain must apply the function in Chain f to the value in Chain m')
   t.deepEqual(m.chain(f).chain(f).chain(g), Some(6))
@@ -74,10 +74,10 @@ test('.chain', (t) => {
 
 // equals :: Setoid a => a ~> a -> Boolean
 test('.equals', (t) => {
-  const a = Some(1)
-  const b = Some(2)
-  const c = Some(1)
-  const d = Some(1)
+  const a = Some.of(1)
+  const b = Some.of(2)
+  const c = Some.of(1)
+  const d = Some.of(1)
 
   t.true(a.equals(c))
   t.false(a.equals(b))
@@ -90,7 +90,19 @@ test('.equals', (t) => {
   t.is(c.equals(d), d.equals(a), 'transitivity 2')
 })
 
-test.todo('.extend')
+// extend :: Extend w => w a ~> (w a -> b) -> w b
+test('.extend', (t) => {
+  const w = Some.of(1)
+  const g = (ov) => ov.extractOr(0) + 1
+  const f = (ov) => ov.extractOr(0) * 2
+
+  t.deepEqual(w.extend(g), Some.of(2), 'extend must apply the function g to the Chain w')
+  t.deepEqual(Option.none().extend(g), Option.none())
+  t.deepEqual(w.extend(g).extend(f), Some.of(4), 'extend must apply the function g to the Chain w')
+
+  t.deepEqual(w.extend(g).extend(f), w.extend((_w) => f(_w.extend(g))))
+})
+
 test.todo('.extractOr')
 test.todo('.extractOrElse')
 test.todo('.filter')
