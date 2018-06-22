@@ -18,8 +18,8 @@ Package written for ECMAScript v5+.
 ```js
 const { Option, Some, None, Result } = require('@es2/result-option')
 
-Some(2)
-Option.Some(2)
+Some.of(2)
+Option.some(2)
 ```
 
 ### ECMAScript Module
@@ -27,8 +27,8 @@ Option.Some(2)
 ```js
 import { Option, Some, None, Result } from '@es2/result-option'
 
-Some(2)
-Option.Some(2)
+Some.of(2)
+Option.some(2)
 ```
 
 ### TypeScript
@@ -36,7 +36,7 @@ Option.Some(2)
 ```ts
 import { Ok, ResultClass } from '@es2/result-option'
 
-const ResultClass<number, string> = Ok(12)
+const ResultClass<number, string> = Ok.of(12)
 ```
 
 ## Examples
@@ -44,8 +44,8 @@ const ResultClass<number, string> = Ok(12)
 ```js
 function divide(numerator, denominator) {
   return numerator === 0
-    ? None()
-    : Some(numerator / denominator)
+    ? Option.zero()
+    : Option.some(numerator / denominator)
 }
 
 const result = divide(12, 3)
@@ -57,7 +57,7 @@ assert(result, 4)
 ```ts
 function checkOptional(optional: Option<number>) {
   if (optional.isSome()) {
-    console.log(`has value ${optional.unwrap()}`)
+    console.log(`has value ${optional.extractOr(null)}`)
   }
   else {
     console.log(`has no value`)
@@ -66,10 +66,10 @@ function checkOptional(optional: Option<number>) {
 ```
 
 ```js
-let msg = Some('foo bar')
+let msg = Some.of('foo bar')
 
 // Destroy option, extract string
-let unwrappedMessage = msg.unwrapOr('default message')
+let unwrappedMessage = msg.extractOr('default message')
 // 'foo bar'
 ```
 
@@ -78,23 +78,22 @@ function getNumberOver5(): Option<number> {
   const number = Math.floor(Math.random() * 10)
 
   if (number > 5) {
-    return None()
+    return Option.none()
   }
 
-  return Some()
+  return Some.of(number)
 }
 
 function printNumber(num: Option<number>) {
-  console.log(`Generated number: ${num.unwrapOr(0)}`)
+  console.log(`Generated number: ${num.extractOr(0)}`)
 }
 
-printNumber(getNumberOver5().or(Some(10)))
+printNumber(getNumberOver5().or(Some.of(10)))
 ```
 
 ```ts
 declare function getUser(id: number): Promise<Option<User>>
 
 return (await getUser(1))
-  .or(User.default())
-  .unwrap()
+  .extractOrElse(() => User.default())
 ```

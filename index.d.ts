@@ -12,7 +12,9 @@ declare class ResultClass<A, X> {
   equals(result: ResultClass<A, X>): boolean;
   err(): OptionClass<X>;
   extractErrOr(defaultValue: X): X;
+  extractErrOrElse(defaultƒ: () => X): X;
   extractOr(defaultValue: A): A;
+  extractOrElse(defaultƒ: () => A): A;
   isErr(): boolean;
   isOk(): boolean;
   iter(): Iterator<A>;
@@ -82,6 +84,7 @@ type Option = {
   none: <T>() => OptionClass<T>,
   is: (value: any) => boolean,
   into: <T>(value?: T) => OptionClass<T>,
+  zero: <T>() => OptionClass<T>,
   encase<A, Rs>(fn: (a: A) => Rs): ((a: A) => OptionClass<Rs>);
   encase<A, B, Rs>(fn: (a: A, b: B) => Rs): ((a: A, b: B) => OptionClass<Rs>);
   encase<A, B, C, Rs>(fn: (a: A, b: B, c: C) => Rs): ((a: A, b: B, c: C) => OptionClass<Rs>);

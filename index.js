@@ -211,6 +211,7 @@ function option$encase(ƒ) {
 const Option = {
   some: Some.of,
   none: None.of,
+  zero: None.of,
   is: option$is,
   into: option$into,
   encase: option$encase,
@@ -274,8 +275,16 @@ class Ok {
     return this[ø]
   }
 
+  extractOrElse(/* defaultƒ */) {
+    return this[ø]
+  }
+
   extractErrOr(defaultValue) {
     return defaultValue
+  }
+
+  extractErrOrElse(defaultƒ) {
+    return defaultƒ()
   }
 
   * iter() {
@@ -377,7 +386,15 @@ class Err {
     return defaultValue
   }
 
+  extractOrElse(defaultƒ) {
+    return defaultƒ()
+  }
+
   extractErrOr(/* defaultValue */) {
+    return this[ø]
+  }
+
+  extractErrOrElse(/* defaultƒ */) {
     return this[ø]
   }
 
