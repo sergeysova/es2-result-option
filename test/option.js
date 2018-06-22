@@ -63,6 +63,18 @@ test('::encase', (t) => {
   t.true(fF().isSome())
 })
 
+// is :: a -> Boolean
+test('::is', (t) => {
+  t.true(Option.is(Some(1)))
+  t.true(Option.is(None(1)))
+
+  t.false(Option.is(new Error('Bar')))
+  t.false(Option.is(12))
+  t.false(Option.is(Option))
+  t.false(Option.is(Option.some))
+  t.false(Option.is(Option.none))
+})
+
 // alt :: Alt f => f a ~> f a -> f a
 test('.alt', (t) => {
   const a = Some.of('a')
@@ -269,17 +281,6 @@ test('.mapOrElse', (t) => {
 // test('None :: Option f, a => b -> f a', (t) => {
 //   t.true(Option.none().isNone())
 //   t.true(None.of().isNone())
-// })
-
-// test('Option.isOption :: Option f => f a -> Boolean', (t) => {
-//   t.true(Option.isOption(Some(1)))
-//   t.true(Option.isOption(None(1)))
-
-//   t.false(Option.isOption(new Error('Bar')))
-//   t.false(Option.isOption(12))
-//   t.false(Option.isOption(Option))
-//   t.false(Option.isOption(Option.some))
-//   t.false(Option.isOption(Option.none))
 // })
 
 // test('isSome :: Option f => f a ~> Boolean', (t) => {
