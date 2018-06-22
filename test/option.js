@@ -228,12 +228,6 @@ test('.mapOrElse', (t) => {
   t.deepEqual(u.mapOrElse(d, (x) => f(g(x))), u.mapOrElse(d, g).mapOrElse(d, f), 'composition')
 })
 
-test.todo('.okOr')
-test.todo('.okOrElse')
-test.todo('.or')
-test.todo('.orElse')
-test.todo('.transpose')
-
 // test('some :: Option f => a -> f a', (t) => {
 //   t.is(Option.some(1).extractOr(5), 1)
 //   t.is(Some.of(1).extractOr(5), 1)

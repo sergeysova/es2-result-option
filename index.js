@@ -90,12 +90,6 @@ Some.prototype = {
   okOrElse(/* errƒ */) {
     return Ok.of(this[ø])
   },
-
-  transpose() {
-    return isNullable(this[ø])
-      ? None.of()
-      : this
-  },
 }
 
 const nothing = Symbol('None')
@@ -183,10 +177,6 @@ None.prototype = {
 
   okOrElse(errƒ) {
     return Err.of(errƒ())
-  },
-
-  transpose() {
-    return this
   },
 }
 
