@@ -102,6 +102,21 @@ test('.alt', (t) => {
   t.is(d.alt(b).alt(c), d.alt(b.alt(c)), 'associativity with None')
 })
 
+// and :: Option f => f a ~> f b -> f b
+test('.and', (t) => {
+  const a = Some.of(1)
+  const b = Some.of(2)
+  const c = Some.of(3)
+  const z = Option.zero()
+
+  t.deepEqual(Some.of(1).and(Some.of(2)), Some.of(2), '1 && 2')
+  t.deepEqual(Some.of(1).and(Option.zero()), Option.zero(), '1 && null')
+  t.deepEqual(Option.zero().and(Some.of(2)), Option.zero(), 'null && null')
+
+  t.is(a.and(b), b)
+  t.is(a.and(b).and(c), a.and(b.and(c)), 'associativity')
+})
+
 // ap :: Apply f => f a ~> f (a -> b) -> f b
 test('.ap', (t) => {
   const a = Some.of(1)

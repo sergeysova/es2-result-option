@@ -63,6 +63,10 @@ Some.prototype = {
     return this
   },
 
+  and(option) {
+    return option
+  },
+
   extractOr(/* defaultValue */) {
     return this[ø]
   },
@@ -149,6 +153,10 @@ None.prototype = {
 
   orElse(optionƒ) {
     return optionƒ()
+  },
+
+  and(/* option */) {
+    return this
   },
 
   extractOr(defaultValue) {

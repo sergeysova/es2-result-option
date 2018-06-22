@@ -53,6 +53,7 @@ declare class OptionClass<A> {
   static of<S>(value: S): OptionClass<S>;
 
   alt(option: OptionClass<A>): OptionClass<A>;
+  and<B>(option: OptionClass<B>): OptionClass<B>;
   ap<B>(option: OptionClass<((value: A) => B)>): OptionClass<B>;
   chain<B>(optionƒ: (value: A) => OptionClass<B>): OptionClass<B>;
   equals(option: OptionClass<A>): boolean;
