@@ -103,7 +103,19 @@ test('.extend', (t) => {
   t.deepEqual(w.extend(g).extend(f), w.extend((_w) => f(_w.extend(g))))
 })
 
-test.todo('.extractOr')
+// extractOr :: Option w => w a ~> (a) -> a
+test('.extractOr', (t) => {
+  const w = Some.of(1)
+  const f = (ov) => ov.extractOr(0) + 1
+
+  t.is(w.extractOr(0), 1)
+  t.is(Option.none().extractOr(0), 0)
+  t.is(w.extend(f).extractOr(0), 2)
+
+  t.deepEqual(w.extend((_w) => w.extractOr(0)), w, 'left identity')
+  t.deepEqual(w.extend(f).extractOr(0), f(w), 'right identity')
+})
+
 test.todo('.extractOrElse')
 test.todo('.filter')
 test.todo('.isNone')
