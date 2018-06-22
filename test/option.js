@@ -91,6 +91,10 @@ test('.alt', (t) => {
   const d = Option.none()
   const ƒ = (f) => `${f}!`
 
+  t.deepEqual(Some.of(1).alt(Some.of(2)), Some.of(1))
+  t.deepEqual(Option.zero().alt(Some.of(2)), Some.of(2))
+  t.deepEqual(Option.zero().alt(Option.zero()), Option.zero())
+
   t.is(a.alt(b).alt(c), a.alt(b.alt(c)), 'associativity')
   t.deepEqual(a.alt(b).map(ƒ), a.map(ƒ).alt(b.map(ƒ)), 'distributivity')
 
@@ -287,6 +291,10 @@ test('.or', (t) => {
   const c = Some.of('c')
   const d = Option.none()
   const ƒ = (f) => `${f}!`
+
+  t.deepEqual(Some.of(1).or(Some.of(2)), Some.of(1), '1 || 2')
+  t.deepEqual(Option.zero().or(Some.of(2)), Some.of(2), 'null || 2')
+  t.deepEqual(Option.zero().or(Option.zero()), Option.zero(), 'null || null')
 
   t.is(a.or(b).or(c), a.or(b.or(c)), 'associativity')
   t.deepEqual(a.or(b).map(ƒ), a.map(ƒ).or(b.map(ƒ)), 'distributivity')
