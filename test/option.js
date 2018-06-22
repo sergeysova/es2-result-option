@@ -75,6 +75,14 @@ test('::is', (t) => {
   t.false(Option.is(Option.none))
 })
 
+// into :: Option f => a -> f a
+test('::into', (t) => {
+  t.deepEqual(Option.into(1), Some.of(1))
+  t.deepEqual(Option.into(NaN), Option.zero())
+  t.true(Option.into(undefined).isNone())
+  t.true(Option.into(null).isNone())
+})
+
 // alt :: Alt f => f a ~> f a -> f a
 test('.alt', (t) => {
   const a = Some.of('a')
@@ -430,8 +438,3 @@ test('.mapOrElse', (t) => {
 //   t.true(fF().isSome())
 // })
 
-// test('Option.into :: Option f => a -> f a', (t) => {
-//   t.is(Option.into(1).unwrap(), 1)
-//   t.is(Option.into(Option.some(1)).unwrap(), 1)
-//   t.true(Option.into(Option.none()).isNone())
-// })
