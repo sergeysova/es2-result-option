@@ -192,8 +192,42 @@ test('.map', (t) => {
   t.deepEqual(u.map((x) => f(g(x))), u.map(g).map(f), 'composition')
 })
 
-test.todo('.mapOr')
-test.todo('.mapOrElse')
+// mapOr :: Option f => f a ~> (b, (a -> b)) -> f b
+test('.mapOr', (t) => {
+  const u = Some.of(1)
+  const f = (val) => val + 1
+  const g = (val) => val * 2
+  const d = 100
+
+  t.deepEqual(u.mapOr(d, f), Some.of(2))
+  t.deepEqual(u.mapOr(d, f).mapOr(d, g), Some.of(4))
+  t.deepEqual(Option.zero().mapOr(d, f).mapOr(d, g), Some.of(200))
+  t.deepEqual(Option.zero().mapOr(d, f), Some.of(100))
+  t.deepEqual(u.mapOr(d, (v) => Some.of(v)), Some.of(Some.of(1)))
+  t.deepEqual(u.mapOr(d, (v) => Some.of(v)).extractOr(Some.of(0)), Some.of(1))
+
+  t.deepEqual(u.mapOr(d, (a) => a), u, 'identity')
+  t.deepEqual(u.mapOr(d, (x) => f(g(x))), u.mapOr(d, g).mapOr(d, f), 'composition')
+})
+
+// mapOrElse :: Option f => f a ~> ((() -> b), (a -> b)) -> f b
+test('.mapOrElse', (t) => {
+  const u = Some.of(1)
+  const f = (val) => val + 1
+  const g = (val) => val * 2
+  const d = () => 100
+
+  t.deepEqual(u.mapOrElse(d, f), Some.of(2))
+  t.deepEqual(u.mapOrElse(d, f).mapOrElse(d, g), Some.of(4))
+  t.deepEqual(Option.zero().mapOrElse(d, f).mapOrElse(d, g), Some.of(200))
+  t.deepEqual(Option.zero().mapOrElse(d, f), Some.of(100))
+  t.deepEqual(u.mapOrElse(d, (v) => Some.of(v)), Some.of(Some.of(1)))
+  t.deepEqual(u.mapOrElse(d, (v) => Some.of(v)).extractOr(Some.of(0)), Some.of(1))
+
+  t.deepEqual(u.mapOrElse(d, (a) => a), u, 'identity')
+  t.deepEqual(u.mapOrElse(d, (x) => f(g(x))), u.mapOrElse(d, g).mapOrElse(d, f), 'composition')
+})
+
 test.todo('.okOr')
 test.todo('.okOrElse')
 test.todo('.or')
