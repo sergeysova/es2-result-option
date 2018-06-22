@@ -34,7 +34,7 @@ Some.prototype = {
   },
 
   filter(ƒ) {
-    return this.chain((value) => ƒ(value) ? Some.of(value) : Some.zero())
+    return this.chain((value) => ƒ(value) ? Some.of(value) : Option.zero())
   },
 
   alt(/* option */) {
