@@ -145,8 +145,18 @@ test('.filter', (t) => {
   t.deepEqual(v.filter(() => false), w.filter(() => false), 'annihilation')
 })
 
-test.todo('.isNone')
-test.todo('.isSome')
+// isNone :: Option f => f a ~> () -> Boolean
+test('.isNone', (t) => {
+  t.false(Some.of(1).isNone())
+  t.true(None.of(1).isNone())
+})
+
+// isSome :: Option f => f a ~> () -> Boolean
+test('.isSome', (t) => {
+  t.true(Some.of(1).isSome())
+  t.false(None.of(1).isSome())
+})
+
 test.todo('.iter')
 test.todo('.map')
 test.todo('.mapOr')
