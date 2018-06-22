@@ -175,7 +175,23 @@ test('.iter', (t) => {
   t.is(saved, 3)
 })
 
-test.todo('.map')
+// map :: Functor f => f a ~> (a -> b) -> f b
+test('.map', (t) => {
+  const u = Some.of(1)
+  const f = (val) => val + 1
+  const g = (val) => val * 2
+
+  t.deepEqual(u.map(f), Some.of(2))
+  t.deepEqual(u.map(f).map(g), Some.of(4))
+  t.deepEqual(Option.zero().map(f).map(g), Option.zero())
+  t.deepEqual(Option.zero().map(f), Option.zero())
+  t.deepEqual(u.map((v) => Some.of(v)), Some.of(Some.of(1)))
+  t.deepEqual(u.map((v) => Some.of(v)).extractOr(Some.of(0)), Some.of(1))
+
+  t.deepEqual(u.map((a) => a), u, 'identity')
+  t.deepEqual(u.map((x) => f(g(x))), u.map(g).map(f), 'composition')
+})
+
 test.todo('.mapOr')
 test.todo('.mapOrElse')
 test.todo('.okOr')
