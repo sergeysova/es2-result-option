@@ -70,7 +70,6 @@ declare class OptionClass<A> {
   okOrElse<E>(errorFn: () => E): ResultClass<A, E>;
   or(option: OptionClass<A>): OptionClass<A>;
   orElse(ƒ: () => OptionClass<A>): OptionClass<A>;
-  transpose(): OptionClass<A>;
 }
 
 export class Some<A> extends OptionClass<A> {}
