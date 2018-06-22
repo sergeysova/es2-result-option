@@ -130,8 +130,21 @@ test('.extractOrElse', (t) => {
   t.deepEqual(w.extend(f).extractOrElse(d), f(w), 'right identity')
 })
 
+// filter :: Filterable f => f a ~> (a -> Boolean) -> f a
+test('.filter', (t) => {
+  const v = Some.of(1)
+  const w = Some.of(2)
+  const p = (val) => val > 0
+  const q = (val) => val % 2 === 0
 
-test.todo('.filter')
+  t.deepEqual(v.filter(p), v)
+  t.deepEqual(v.filter(q), Option.zero())
+
+  t.deepEqual(w.filter((x) => p(x) && q(x)), w.filter(p).filter(q), 'distributivity')
+  t.deepEqual(v.filter(() => true), v, 'identity')
+  t.deepEqual(v.filter(() => false), w.filter(() => false), 'annihilation')
+})
+
 test.todo('.isNone')
 test.todo('.isSome')
 test.todo('.iter')
