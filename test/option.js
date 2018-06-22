@@ -13,6 +13,10 @@ test('exported Some and None is equal Option static props', (t) => {
 test('::zero returns None', (t) => {
   t.true(Option.zero().isNone())
   t.true(Option.zero(1).isNone())
+  t.deepEqual(Option.zero(), None.of())
+  t.deepEqual(Option.zero(2), None.of())
+  t.deepEqual(Option.zero(), new None())
+  t.deepEqual(Option.zero(3), new None())
 })
 
 test('{Some, None} as functions', (t) => {
