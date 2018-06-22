@@ -157,7 +157,24 @@ test('.isSome', (t) => {
   t.false(None.of(1).isSome())
 })
 
-test.todo('.iter')
+// iter :: Option f => f a ~> () -> Iterator a
+test('.iter', (t) => {
+  t.deepEqual(Some.of(1).iter().next(), { done: false, value: 1 })
+  t.deepEqual(Option.zero().iter().next(), { done: true, value: undefined })
+
+  const iter = Some.of(2).iter()
+
+  t.is(iter.next().value, 2)
+  t.true(iter.next().done)
+
+  let saved
+
+  for (const value of Some.of(3).iter()) {
+    saved = value
+  }
+  t.is(saved, 3)
+})
+
 test.todo('.map')
 test.todo('.mapOr')
 test.todo('.mapOrElse')
