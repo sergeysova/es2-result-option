@@ -280,6 +280,32 @@ test('.mapOrElse', (t) => {
   t.deepEqual(u.mapOrElse(d, (x) => f(g(x))), u.mapOrElse(d, g).mapOrElse(d, f), 'composition')
 })
 
-test.todo('Option.or')
+// or :: Option f => f a ~> f a -> f a
+test('.or', (t) => {
+  const a = Some.of('a')
+  const b = Some.of('b')
+  const c = Some.of('c')
+  const d = Option.none()
+  const ƒ = (f) => `${f}!`
 
-test.todo('Option.orElse')
+  t.is(a.or(b).or(c), a.or(b.or(c)), 'associativity')
+  t.deepEqual(a.or(b).map(ƒ), a.map(ƒ).or(b.map(ƒ)), 'distributivity')
+
+  t.is(a.or(d).or(c), a.or(d.or(c)), 'associativity with None')
+  t.is(d.or(b).or(c), d.or(b.or(c)), 'associativity with None')
+})
+
+// orElse :: Option f => f a ~> (() -> f a) -> f a
+test('.orElse', (t) => {
+  const a = Some.of('a')
+  const b = Some.of('b')
+  const c = Some.of('c')
+  const d = Option.none()
+  const ƒ = (f) => `${f}!`
+
+  t.is(a.orElse(() => b).orElse(() => c), a.orElse(() => b.orElse(() => c)), 'associativity')
+  t.deepEqual(a.orElse(() => b).map(ƒ), a.map(ƒ).orElse(() => b.map(ƒ)), 'distributivity')
+
+  t.is(a.orElse(() => d).orElse(() => c), a.orElse(() => d.orElse(() => c)), 'associativity with None')
+  t.is(d.orElse(() => b).orElse(() => c), d.orElse(() => b.orElse(() => c)), 'associativity with None')
+})
