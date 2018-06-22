@@ -54,6 +54,7 @@ test('.ap', (t) => {
 
   t.deepEqual(a.ap(b), Some(2), 'ap must apply the function in Apply b to the value in Apply a')
   t.deepEqual(a.ap(b).ap(c), Some(4))
+  t.deepEqual(None().ap(b).ap(c), None())
 
   t.deepEqual(a.ap(b).ap(c), a.ap(b.ap(c.map((f) => (g) => (x) => f(g(x))))), 'composition')
 })
@@ -66,11 +67,29 @@ test('.chain', (t) => {
 
   t.deepEqual(m.chain(f), Some(2), 'chain must apply the function in Chain f to the value in Chain m')
   t.deepEqual(m.chain(f).chain(f).chain(g), Some(6))
+  t.deepEqual(None().chain(f).chain(f).chain(g), None())
 
   t.deepEqual(m.chain(f).chain(g), m.chain((x) => f(x).chain(g)), 'associativity')
 })
 
-test.todo('.equals')
+// equals :: Setoid a => a ~> a -> Boolean
+test('.equals', (t) => {
+  const a = Some(1)
+  const b = Some(2)
+  const c = Some(1)
+  const d = Some(1)
+
+  t.true(a.equals(c))
+  t.false(a.equals(b))
+  t.false(Some(1).equals(None()))
+  t.true(None().equals(None()))
+
+  t.true(a.equals(a), 'reflexivity')
+  t.is(a.equals(c), c.equals(a), 'symmetry')
+  t.is(a.equals(c), c.equals(d), 'transitivity 1')
+  t.is(c.equals(d), d.equals(a), 'transitivity 2')
+})
+
 test.todo('.extend')
 test.todo('.extractOr')
 test.todo('.extractOrElse')
