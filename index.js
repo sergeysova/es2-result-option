@@ -42,7 +42,7 @@ Some.prototype = {
   },
 
   extend(ƒ) {
-    return Some.of(ƒ(this[ø]))
+    return Some.of(ƒ(this))
   },
 
 
