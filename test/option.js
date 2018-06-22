@@ -10,7 +10,7 @@ test('exported Some and None is equal Option static props', (t) => {
   t.is(Some.of, Option.some)
 })
 
-test('.zero returns None', (t) => {
+test('::zero returns None', (t) => {
   t.true(Option.zero().isNone())
   t.true(Option.zero(1).isNone())
 })
@@ -23,12 +23,40 @@ test('{Some, None} as functions', (t) => {
   t.true(None(1) instanceof None)
 })
 
-test('{Some, None}.of', (t) => {
+test('::of', (t) => {
   t.true(Some.of(1).isSome())
   t.true(Some.of(1) instanceof Some)
 
   t.true(None.of(1).isNone())
   t.true(None.of(1) instanceof None)
+})
+
+// encase :: Option f => (a -> b) -> (a -> f b)
+test('::encase', (t) => {
+  const f1 = Option.encase(() => 1)
+  const f2 = Option.encase((a) => a + 1)
+  const f3 = Option.encase((...args) => args)
+  const f4 = Option.encase(() => {
+    throw new Error('foo')
+  })
+  const f5 = Option.encase(() => { })
+  const f6 = Option.encase(() => null)
+  const f7 = Option.encase(() => 0 / 0)
+  const f8 = Option.encase(() => '')
+  const f9 = Option.encase(() => [])
+  const fF = Option.encase(() => ({}))
+
+  t.is(f1().extractOr(0), 1)
+  t.is(f2(2).extractOr(0), 3)
+  t.deepEqual(f3(1, 5, 9, 12).extractOr([]), [1, 5, 9, 12])
+  t.true(f4().isNone())
+
+  t.true(f5().isSome())
+  t.true(f6().isSome())
+  t.true(f7().isSome())
+  t.true(f8().isSome())
+  t.true(f9().isSome())
+  t.true(fF().isSome())
 })
 
 // alt :: Alt f => f a ~> f a -> f a
@@ -371,7 +399,7 @@ test('.mapOrElse', (t) => {
 //   t.true(None().orElse(nobody).isNone())
 // })
 
-// test('Option.encase :: Option f => (r -> a) -> (r -> f a)', (t) => {
+// test('Option.wrap :: Option f => (r -> a) -> (r -> f a)', (t) => {
 //   const f1 = Option.encase(() => 1)
 //   const f2 = Option.encase((a) => a + 1)
 //   const f3 = Option.encase((...args) => args)
@@ -385,36 +413,9 @@ test('.mapOrElse', (t) => {
 //   const f9 = Option.encase(() => [])
 //   const fF = Option.encase(() => ({}))
 
-//   t.is(f1().unwrap(), 1)
-//   t.is(f2(2).unwrap(), 3)
-//   t.deepEqual(f3(1, 5, 9, 12).unwrap(), [1, 5, 9, 12])
-//   t.true(f4().isNone())
-
-//   t.true(f5().isSome())
-//   t.true(f6().isSome())
-//   t.true(f7().isSome())
-//   t.true(f8().isSome())
-//   t.true(f9().isSome())
-//   t.true(fF().isSome())
-// })
-
-// test('Option.wrap :: Option f => (r -> a) -> (r -> f a)', (t) => {
-//   const f1 = Option.wrap(() => 1)
-//   const f2 = Option.wrap((a) => a + 1)
-//   const f3 = Option.wrap((...args) => args)
-//   const f4 = Option.wrap(() => {
-//     throw new Error('foo')
-//   })
-//   const f5 = Option.wrap(() => { })
-//   const f6 = Option.wrap(() => null)
-//   const f7 = Option.wrap(() => 0 / 0)
-//   const f8 = Option.wrap(() => '')
-//   const f9 = Option.wrap(() => [])
-//   const fF = Option.wrap(() => ({}))
-
-//   t.is(f1().unwrap(), 1)
-//   t.is(f2(2).unwrap(), 3)
-//   t.deepEqual(f3(1, 5, 9, 12).unwrap(), [1, 5, 9, 12])
+//   t.is(f1().extractOr(0), 1)
+//   t.is(f2(2).extractOr(0), 3)
+//   t.deepEqual(f3(1, 5, 9, 12).extractOr([]), [1, 5, 9, 12])
 //   t.true(f4().isNone())
 //   t.true(f5().isNone())
 //   t.true(f6().isNone())
