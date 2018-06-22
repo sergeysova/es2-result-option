@@ -1,7 +1,7 @@
 /* eslint-disable id-match, no-use-before-define */
 
-const ø = Symbol('ø')
-
+const ø = Symbol('value')
+const type = Symbol('type')
 
 function isNullable(value) {
   return value === null || typeof value === 'undefined' || Number.isNaN(value)
@@ -12,6 +12,7 @@ function Some(value) {
     return new Some(value)
   }
   this[ø] = value
+  this[type] = 'Some'
 }
 
 Some.of = (value) => new Some(value)
@@ -97,11 +98,14 @@ Some.prototype = {
   },
 }
 
+const nothing = Symbol('None')
+
 function None() {
   if (!(this instanceof None)) {
     return new None()
   }
-  this[ø] = null
+  this[ø] = nothing
+  this[type] = 'None'
 }
 
 None.of = () => new None()
@@ -221,6 +225,7 @@ function Ok(value) {
     return new Ok(value)
   }
   this[ø] = value
+  this[type] = 'Ok'
 }
 
 Ok.of = (value) => new Ok(value)
@@ -333,6 +338,7 @@ function Err(value) {
     return new Err(value)
   }
   this[ø] = value
+  this[type] = 'Err'
 }
 
 Err.of = (value) => new Err(value)
