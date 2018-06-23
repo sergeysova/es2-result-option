@@ -1,4 +1,7 @@
 /* eslint-disable id-match, no-use-before-define */
+const FL = require('fantasy-land')
+const show = require('sanctuary-show')
+
 
 const ø = Symbol('value')
 const type = Symbol('type')
@@ -17,7 +20,7 @@ function Some(value) {
 
 Some.of = (value) => new Some(value)
 
-Some.prototype = {
+Object.assign(Some.prototype, {
   map(ƒ) {
     return Some.of(ƒ(this[ø]))
   },
@@ -98,7 +101,13 @@ Some.prototype = {
   okOrElse(/* errƒ */) {
     return Ok.of(this[ø])
   },
-}
+
+  '@@show': function __show() {
+    return `Some(${show(this[ø])})`
+  },
+
+  of: Some.of,
+})
 
 const nothing = Symbol('None')
 
@@ -112,7 +121,7 @@ function None() {
 
 None.of = () => new None()
 
-None.prototype = {
+Object.assign(None.prototype, {
 
   map(/* ƒ */) {
     return None.of()
@@ -194,7 +203,13 @@ None.prototype = {
   okOrElse(errƒ) {
     return Err.of(errƒ())
   },
-}
+
+  '@@show': function __show() {
+    return 'None()'
+  },
+
+  of: None.of,
+})
 
 function option$is(value) {
   return value instanceof Some || value instanceof None
@@ -225,6 +240,24 @@ const Option = {
   into: option$into,
   encase: option$encase,
 }
+
+Some.prototype[FL.equals] = Some.prototype.equals
+Some.prototype[FL.map] = Some.prototype.map
+Some.prototype[FL.ap] = Some.prototype.ap
+Some.prototype[FL.alt] = Some.prototype.or
+Some.prototype[FL.chain] = Some.prototype.chain
+Some.prototype[FL.extend] = Some.prototype.extend
+Some[FL.of] = Some.of
+Some[FL.zero] = Option.zero
+
+None.prototype[FL.equals] = None.prototype.equals
+None.prototype[FL.map] = None.prototype.map
+None.prototype[FL.ap] = None.prototype.ap
+None.prototype[FL.alt] = None.prototype.or
+None.prototype[FL.chain] = None.prototype.chain
+None.prototype[FL.extend] = None.prototype.extend
+None[FL.of] = None.of
+None[FL.zero] = Option.zero
 
 function Ok(value) {
   if (!(this instanceof Ok)) {

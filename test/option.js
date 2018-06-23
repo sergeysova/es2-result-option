@@ -1,6 +1,7 @@
 /* eslint-disable no-magic-numbers, no-unused-vars, id-match */
 /* eslint-disable one-var, one-var-declaration-per-line */
 import test from 'ava'
+import Z from 'sanctuary-type-classes'
 
 import { Option, Some, None } from '../index'
 
@@ -346,4 +347,68 @@ test('.orElse', (t) => {
 
   t.is(a.orElse(() => d).orElse(() => c), a.orElse(() => d.orElse(() => c)), 'associativity with None')
   t.is(d.orElse(() => b).orElse(() => c), d.orElse(() => b.orElse(() => c)), 'associativity with None')
+})
+
+test('fantasy >> Setoid', (t) => {
+  t.true(Z.Setoid.test(Some.of(1)), 'Some is Setoid')
+  t.true(Z.Setoid.test(None.of()), 'None is Setoid')
+})
+
+test('fantasy >> Functor', (t) => {
+  t.true(Z.Functor.test(Some.of(1)), 'Some is Functor')
+  t.true(Z.Functor.test(None.of()), 'None is Functor')
+})
+
+test('fantasy >> Filterable', (t) => {
+  t.true(Z.Filterable.test(Some.of(1)), 'Some is Filterable')
+  t.true(Z.Filterable.test(None.of()), 'None is Filterable')
+})
+
+test('fantasy >> Apply', (t) => {
+  t.true(Z.Apply.test(Some.of(1)), 'Some is Apply')
+  t.true(Z.Apply.test(None.of()), 'None is Apply')
+})
+
+test('fantasy >> Applicative', (t) => {
+  t.true(Z.Applicative.test(Some.of(1)), 'Some is Applicative')
+  t.true(Z.Applicative.test(None.of()), 'None is Applicative')
+})
+
+test('fantasy >> Alt', (t) => {
+  t.true(Z.Alt.test(Some.of(1)), 'Some is Alt')
+  t.true(Z.Alt.test(None.of()), 'None is Alt')
+})
+
+test('fantasy >> Plus', (t) => {
+  t.true(Z.Plus.test(Some.of(1)), 'Some is Plus')
+  t.true(Z.Plus.test(None.of()), 'None is Plus')
+})
+
+test('fantasy >> Chain', (t) => {
+  t.true(Z.Chain.test(Some.of(1)), 'Some is Chain')
+  t.true(Z.Chain.test(None.of()), 'None is Chain')
+})
+
+test('fantasy >> Extend', (t) => {
+  t.true(Z.Extend.test(Some.of(1)), 'Some is Extend')
+  t.true(Z.Extend.test(None.of()), 'None is Extend')
+})
+
+test('fantasy >> Alternative', (t) => {
+  t.true(Z.Alternative.test(Some.of(1)), 'Some is Alternative')
+  t.true(Z.Alternative.test(None.of()), 'None is Alternative')
+})
+
+test('fantasy >> Monad', (t) => {
+  t.true(Z.Monad.test(Some.of(1)), 'Some is Monad')
+  t.true(Z.Monad.test(None.of()), 'None is Monad')
+})
+
+test('fantasy laws', (t) => {
+  t.deepEqual(Z.map((a) => a + 1, Some.of(1)), Some.of(2))
+  t.deepEqual(Z.of(Some, 5), Some.of(5))
+  t.deepEqual(Z.join(Some.of(Some.of(1))), Some.of(1))
+  t.deepEqual(Z.alt(Some.of(1), Some.of(2)), Some.of(1))
+  t.deepEqual(Z.alt(Option.zero(), Some.of(2)), Some.of(2))
+  t.deepEqual(Z.zero(Some), None.of())
 })
