@@ -1,0 +1,333 @@
+
+## Table of contents
+
+- [`Result.of`](#resultof)
+- [`Result.isResult`](#resultisresult)
+- [`Result.into`](#resultinto)
+- [`Result.encase`](#resultencase)
+- [`Ok` and `Result.ok`](#ok)
+- [`Err` and `Result.err`](#err)
+
+### Instance
+
+- [`isOk`](#isok)
+- [`isErr`](#iserr)
+- [`equals`](#equals)
+- [`either`](#either)
+- [`map`](#map)
+- [`mapErr`](#maperr)
+- [`bimap`](#bimap)
+- [`chain`](#chain)
+- [`chainErr`](#chainerr)
+- [`iter`](#iter)
+- [`and`](#and)
+- [`andThen`](#andthen)
+- [`or`](#or)
+- [`orElse`](#orelse)
+- [`unwrap`](#unwrap)
+- [`unwrapOr`](#unwrapor)
+- [`unwrapOrElse`](#unwraporelse)
+- [`unwrapErr`](#unwraperr)
+- [`expect`](#expect)
+- [`expectErr`](#expecterr)
+- [`promise`](#promise)
+- [`swap`](#swap)
+- [`extract`](#extract)
+- [`extractErr`](#extracterr)
+
+### Result.of
+
+Create result of passed value or error.
+
+
+```hs
+Result.of :: Result f => a -> f a
+```
+
+If passed instance of `Error`, returns `Err`. Otherwise returns `Ok`.
+
+```js
+Result.of(1).isOk() === true
+Result.of(null).isOk() === true
+Result.of(new Error()).isErr() === true
+```
+
+
+### Result.isResult
+
+Check if passed instance of `Result`.
+
+
+```hs
+Result.isResult :: Result f => f a b -> Boolean
+```
+
+If passed `Ok` or `Err` returns `true`. Otherwise returns `false`.
+
+```js
+Result.isResult(Ok(1)) === true
+Result.isResult(Result.err(2)) === true
+Result.isResult(1) === false
+Result.isResult(new Error()) === false
+```
+
+### Result.into
+
+Converts passed value to `Result`.
+
+
+```hs
+Result.into :: Result f => a -> f a
+```
+
+```js
+Result.into(1).isOk() === true
+Result.into(new Error('foo')).isErr() === true
+Result.into(Ok(1)).unwrap() === 1
+Result.into(Err(2)).unwrapErr() === 2
+```
+
+### Result.encase
+
+Wrap function that throws to function that returns `Result`.
+
+
+```hs
+Result.encase :: Result f => (r -> a) -> (r -> f a b)
+```
+
+```js
+const fail = () => {
+  throw new Error('1')
+}
+const safeFail = Result.encase(fail)
+const safe = Result.encase((a, b) => a + b)
+
+safeFail().unwrapErr().message === '1'
+safe(1, 2).unwrap() == 3
+```
+
+### Ok
+
+Create success result value.
+
+
+```hs
+Ok :: Result f => a -> f a b
+Result.ok :: Result f => a -> f a b
+Ok.of :: Result f => a -> f a b
+```
+
+Just wrap passed value to `Ok`.
+
+```js
+Ok(1)
+Result.ok(2)
+Ok.of(3)
+```
+
+### Err
+
+Create fail result value.
+
+
+```hs
+Err :: Result f => b -> f a b
+Result.err :: Result f => b -> f a b
+Err.of :: Result f => b -> f a b
+```
+
+Just wrap passed value to `Err`.
+
+```js
+Err(1)
+Result.err(2)
+Err.of(3)
+```
+
+### isOk
+
+Check if passed value is `Ok`.
+
+
+```hs
+isOk :: Result f => f a b ~> Boolean
+Ok.isOk :: Result f => f a b -> Boolean
+```
+
+If passed `Ok` instance of `Result` returns `true`, otherwise returns `false`.
+
+```js
+Ok(1).isOk() === true
+Ok.isOk(Ok(1)) === true
+Err(2).isOk() === false
+Ok.isOk(Err(2)) === false
+```
+
+### isErr
+
+Check if passed value is `Err`.
+
+
+```hs
+isErr :: Result f => f a b ~> Boolean
+Err.isErr :: Result f => f a b -> Boolean
+```
+
+If passed `Err` instance of `Result` returns `true`, otherwise returns `false`.
+
+```js
+Err(1).isErr() === true
+Err.isErr(Err(1)) === true
+Ok(2).isErr() === false
+Err.isErr(Ok(2)) === false
+```
+
+### equals
+
+Check if passed result is equals current.
+
+
+```hs
+equals :: Result f => f ~> f -> Boolean
+```
+
+If passed `Ok` and `Err` returns `false`. Otherwise check inner values with `===`.
+
+```js
+Ok(1).equals(Ok(1)) === true
+Ok(2).equals(Err(2)) === false
+Ok(3).equals(Ok(4)) === false
+```
+
+### either
+
+Transform `Result` to single value.
+
+
+```hs
+either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r
+```
+
+Apply one of two functions depending on contents, unifying their result.<br/>
+If current result is `Ok` then the first function `mapFn` is applied, if it is `Err` then the second function `errFn` is applied.
+
+```js
+const sq = (x) => x * x
+const ng = (x) => -x
+
+Ok(2).either(sq, ng) === 4
+Err(2).either(sq, ng) === -2
+```
+
+### map
+
+Apply function to `Ok` inner value.
+
+
+```hs
+map :: Result f => f a b ~> (a -> q) -> f q
+```
+
+If `map` called on `Err` value, returns `Err` with it inner value.
+
+```js
+Ok(3).map((a) => a + a).unwrap() === 6
+Err(5).map((a) => a + a).isErr() === true
+Err(5).map((a) => a + a).unwrapErr() === 5
+Ok(3).map((a) => a + a).map((b) => b - 1).unwrap() === 5
+```
+
+### mapErr
+
+Apply function `Err` inner value.
+
+
+```hs
+mapErr :: Result f => f a b ~> (b -> r) -> f r
+```
+
+If `mapErr` called on `Ok` value, returns `Ok` with it inner value.
+
+
+```js
+Ok(2).mapErr((e) => e + 3).unwrap() === 2
+Err(2).mapErr((e) => e + 3).unwrapErr() === 5
+Err(4).mapErr((e) => e * 2).mapErr((e) => e - 1).map((v) => v + 1).unwrapErr() === 7
+```
+
+### bimap
+
+Apply two functions to `Ok` and `Err` inner values.
+
+
+```hs
+bimap :: Result f => f a b ~> (a -> q) -> (b -> z) -> f q z
+```
+
+
+Sugar for chained `map` and `mapErr` calls.<br/>
+If `bimap` called on `Ok` value then first function applied; if called on `Err` then second function applied.<br/>
+Type of `Result` not changed after `bimap` call.
+
+```js
+const a = (x) => x * x
+const b = (y) => y + y
+
+Ok(4).bimap(a, b).unwrap() === 16
+Err(4).bimap(a, b).unwrapErr() === 8
+
+Ok(4).bimap(a, b)
+// equals
+Ok(4).map(a).mapErr(b)
+```
+
+### chain
+
+
+### chainErr
+
+
+### iter
+
+
+### and
+
+
+### andThen
+
+
+### or
+
+
+### orElse
+
+
+### unwrap
+
+
+### unwrapOr
+
+
+### unwrapOrElse
+
+
+### unwrapErr
+
+
+### expect
+
+
+### expectErr
+
+
+### promise
+
+
+### swap
+
+
+### extract
+
+
+### extractErr
