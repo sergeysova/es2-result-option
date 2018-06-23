@@ -23,34 +23,37 @@ import { Option, Some, None } from '@es2/result-option'
 
 ## Table of contents
 
-- [`Option.fromNullable` Create option based on value](#optionfromnullable)
-- [`Option.isOption`](#optionisoption)
-- [`Option.encase`](#optionencase)
-- [`Option.wrap`](#optionwrap)
-- [`Option.into`](#optioninto)
 - [`Some` and `Option.some`](#some)
 - [`None` and `Option.none`](#none)
+- [`Option.is`](#optionis)
+- [`Option.into`](#optioninto)
+- [`Option.zero`](#optionzero)
+- [`Option.encase`](#optionencase)
 
 ### Instance
 
-- [`isSome`](#issome)
-- [`isNone`](#isnone)
+- [`alt`](#alt)
+- [`and`](#and)
+- [`ap`](#ap)
+- [`chain`](#chain)
 - [`equals`](#equals)
-- [`unwrap`](#unwrap)
-- [`unwrapOr`](#unwrapor)
-- [`unwrapOrElse`](#unwraporelse)
+- [`extend`](#extend)
+- [`extractOr`](#extractor)
+- [`extractOrElse`](#extractorelse)
+- [`filter`](#filter)
+- [`isNone`](#isnone)
+- [`isSome`](#issome)
+- [`iter`](#iter)
 - [`map`](#map)
 - [`mapOr`](#mapor)
 - [`mapOrElse`](#maporelse)
-- [`chain`](#chain)
-- [`iter`](#iter)
-- [`and`](#and)
-- [`andThen`](#andthen)
-- [`filter`](#filter)
+- [`okOr`](#okor)
+- [`okOrElse`](#okorelse)
 - [`or`](#or)
 - [`orElse`](#orelse)
+- [`orElse`](#orelse)
 
-### Option.fromNullable
+<!-- ### Option.fromNullable
 
 Create option of passed value.
 
@@ -517,4 +520,4 @@ Some(2).orElse(() => Some(1)).unwrap() === 2
 
 // null || (() => 1)()
 None().orElse(() => Some(1)).unwrap() === 1
-```
+``` -->
