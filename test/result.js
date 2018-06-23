@@ -5,297 +5,323 @@ import test from 'ava'
 import { Result, Ok, Err } from '../index'
 
 
-test('exported Ok and Err is equal Result static props', (t) => {
-  t.is(Err, Result.err)
-  t.is(Ok, Result.ok)
-})
+test.todo('.ap')
+test.todo('.apErr')
+test.todo('.bimap')
+test.todo('.chain')
+test.todo('.chainErr')
+test.todo('.either')
+test.todo('.equals')
+test.todo('.err')
+test.todo('.extractErrOr')
+test.todo('.extractErrOrElse')
+test.todo('.extractOr')
+test.todo('.extractOrElse')
+test.todo('.isErr')
+test.todo('.isOk')
+test.todo('.iter')
+test.todo('.iterErr')
+test.todo('.map')
+test.todo('.mapErr')
+test.todo('.mapErrOr')
+test.todo('.mapErrOrElse')
+test.todo('.mapOr')
+test.todo('.mapOrElse')
+test.todo('.ok')
+test.todo('.promise')
+test.todo('.swap')
 
-test('no constructor of Result', (t) => {
-  t.true(typeof Result === 'object')
-})
+// test('exported Ok and Err is equal Result static props', (t) => {
+//   t.is(Err, Result.err)
+//   t.is(Ok, Result.ok)
+// })
 
-test('Ok :: Result f => a -> f a b', (t) => {
-  t.is(Ok(1).unwrap(), 1)
-  t.is(Result.ok(1).unwrap(), 1)
-})
+// test('no constructor of Result', (t) => {
+//   t.true(typeof Result === 'object')
+// })
 
-test('Err :: Result f => b -> f a b', (t) => {
-  t.is(Err(1).unwrapErr(), 1)
-  t.is(Result.err(1).unwrapErr(), 1)
-})
+// test('Ok :: Result f => a -> f a b', (t) => {
+//   t.is(Ok(1).unwrap(), 1)
+//   t.is(Result.ok(1).unwrap(), 1)
+// })
 
-test('Result.of :: Result f => a -> f a', (t) => {
-  t.is(Result.of(1).unwrap(), 1)
-  t.is(Result.of(null).unwrap(), null)
-  const error = new Error('test error')
+// test('Err :: Result f => b -> f a b', (t) => {
+//   t.is(Err(1).unwrapErr(), 1)
+//   t.is(Result.err(1).unwrapErr(), 1)
+// })
 
-  t.is(Result.of(error).unwrapErr(), error)
-})
+// test('Result.of :: Result f => a -> f a', (t) => {
+//   t.is(Result.of(1).unwrap(), 1)
+//   t.is(Result.of(null).unwrap(), null)
+//   const error = new Error('test error')
 
-test('Result.into :: Result f => a -> f a', (t) => {
-  t.true(Result.into(new Error('example')).isErr())
-  t.is(Result.into(new Error('example')).unwrapErr().message, 'example')
-  t.is(Result.into('example').unwrap(), 'example')
-  t.is(Result.into(Ok(1)).unwrap(), 1)
-  t.is(Result.into(Err(2)).unwrapErr(), 2)
-})
+//   t.is(Result.of(error).unwrapErr(), error)
+// })
 
-test('Result.isResult :: Result f => f a b -> Boolean', (t) => {
-  t.true(Result.isResult(Ok(1)))
-  t.true(Result.isResult(Err(1)))
+// test('Result.into :: Result f => a -> f a', (t) => {
+//   t.true(Result.into(new Error('example')).isErr())
+//   t.is(Result.into(new Error('example')).unwrapErr().message, 'example')
+//   t.is(Result.into('example').unwrap(), 'example')
+//   t.is(Result.into(Ok(1)).unwrap(), 1)
+//   t.is(Result.into(Err(2)).unwrapErr(), 2)
+// })
 
-  t.false(Result.isResult(new Error('Bar')))
-  t.false(Result.isResult(12))
-  t.false(Result.isResult(Result))
-  t.false(Result.isResult(Result.ok))
-  t.false(Result.isResult(Result.err))
-})
+// test('Result.isResult :: Result f => f a b -> Boolean', (t) => {
+//   t.true(Result.isResult(Ok(1)))
+//   t.true(Result.isResult(Err(1)))
 
-test('Result.encase :: Result f => (r -> a) -> (r -> f a b)', (t) => {
-  t.is(typeof Result.encase(() => { }), 'function', 'encase return function')
+//   t.false(Result.isResult(new Error('Bar')))
+//   t.false(Result.isResult(12))
+//   t.false(Result.isResult(Result))
+//   t.false(Result.isResult(Result.ok))
+//   t.false(Result.isResult(Result.err))
+// })
 
-  const f1 = Result.encase(() => 1)
-  const f2 = Result.encase((a) => a)
-  const f3 = Result.encase((a, b) => a + b)
-  const f4 = Result.encase(() => {
-    throw new Error('4')
-  })
-  const f5 = Result.encase((a, b, c) => {
-    throw new Error(`${a + b + c}`)
-  })
-  const f6 = Result.encase((a, b, c) => {
-    throw `${a + b + c}` // eslint-disable-line no-throw-literal
-  })
+// test('Result.encase :: Result f => (r -> a) -> (r -> f a b)', (t) => {
+//   t.is(typeof Result.encase(() => { }), 'function', 'encase return function')
 
-  t.is(f1().unwrap(), 1, 'return Ok wrapped value')
-  t.is(f2(2).unwrap(), 2, 'pass single argument and return Ok')
-  t.is(f3(1, 2).unwrap(), 3, 'pass 2 arguments and return Ok')
-  t.deepEqual(f4().unwrapErr(), new Error('4'), 'wrap exception to Err')
-  t.deepEqual(f5(1, 2, 2).unwrapErr(), new Error('5'), 'pass 3 args and wrap exception to Err')
-  t.is(f6(1, 2, 3).unwrapErr(), '6', 'wrap throwed string to Err')
-  t.true(f5(1, 2, 3).unwrapErr() instanceof Error)
-})
+//   const f1 = Result.encase(() => 1)
+//   const f2 = Result.encase((a) => a)
+//   const f3 = Result.encase((a, b) => a + b)
+//   const f4 = Result.encase(() => {
+//     throw new Error('4')
+//   })
+//   const f5 = Result.encase((a, b, c) => {
+//     throw new Error(`${a + b + c}`)
+//   })
+//   const f6 = Result.encase((a, b, c) => {
+//     throw `${a + b + c}` // eslint-disable-line no-throw-literal
+//   })
 
-test('isOk :: Result f => f a b ~> Boolean', (t) => {
-  t.true(Ok(0).isOk())
-  t.false(Err(new Error('foo')).isOk())
-  t.true(Ok.isOk(Ok(1)))
-  t.false(Err.isErr(Ok(1)))
-})
+//   t.is(f1().unwrap(), 1, 'return Ok wrapped value')
+//   t.is(f2(2).unwrap(), 2, 'pass single argument and return Ok')
+//   t.is(f3(1, 2).unwrap(), 3, 'pass 2 arguments and return Ok')
+//   t.deepEqual(f4().unwrapErr(), new Error('4'), 'wrap exception to Err')
+//   t.deepEqual(f5(1, 2, 2).unwrapErr(), new Error('5'), 'pass 3 args and wrap exception to Err')
+//   t.is(f6(1, 2, 3).unwrapErr(), '6', 'wrap throwed string to Err')
+//   t.true(f5(1, 2, 3).unwrapErr() instanceof Error)
+// })
 
-test('isErr :: Result f => f a b ~> Boolean', (t) => {
-  t.false(Ok(0).isErr())
-  t.true(Err(new Error('foo')).isErr())
-  t.true(Err.isErr(Err(new Error('foo'))))
-  t.false(Ok.isOk(Err(new Error('foo'))))
-})
+// test('isOk :: Result f => f a b ~> Boolean', (t) => {
+//   t.true(Ok(0).isOk())
+//   t.false(Err(new Error('foo')).isOk())
+//   t.true(Ok.isOk(Ok(1)))
+//   t.false(Err.isErr(Ok(1)))
+// })
 
-test('equals :: Result f => f ~> f -> Boolean', (t) => {
-  t.true(Ok(1).equals(Ok(1)))
-  t.false(Ok(2).equals(Ok(1)))
-  t.false(Err(1).equals(Ok(1)))
-  t.false(Err(1).equals(Err(2)))
-  t.true(Err(1).equals(Err(1)))
-})
+// test('isErr :: Result f => f a b ~> Boolean', (t) => {
+//   t.false(Ok(0).isErr())
+//   t.true(Err(new Error('foo')).isErr())
+//   t.true(Err.isErr(Err(new Error('foo'))))
+//   t.false(Ok.isOk(Err(new Error('foo'))))
+// })
 
-test('either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r', (t) => {
-  t.is(Ok(1).either((a) => a + 1, (b) => b + 2), 2)
-  t.is(Err(2).either((a) => a + 1, (b) => b + 2), 4)
-})
+// test('equals :: Result f => f ~> f -> Boolean', (t) => {
+//   t.true(Ok(1).equals(Ok(1)))
+//   t.false(Ok(2).equals(Ok(1)))
+//   t.false(Err(1).equals(Ok(1)))
+//   t.false(Err(1).equals(Err(2)))
+//   t.true(Err(1).equals(Err(1)))
+// })
 
-test('map :: Result f => f a b ~> (a -> r) -> f r', (t) => {
-  t.is(Ok(1).map((a) => a + 1).unwrapOr(100), 2)
-  t.is(Err(1).map((a) => a + 1).unwrapOr(100), 100)
-  t.is(Err(1).map((a) => a + 1).unwrapErr(), 1)
-})
+// test('either :: Result f => f a b ~> (a -> r) -> (b -> r) -> r', (t) => {
+//   t.is(Ok(1).either((a) => a + 1, (b) => b + 2), 2)
+//   t.is(Err(2).either((a) => a + 1, (b) => b + 2), 4)
+// })
 
-test('mapErr :: Result f => f a b ~> (b -> r) -> f r', (t) => {
-  t.is(Ok(2).mapErr((e) => 3).unwrap(), 2)
-  t.is(Err(2).mapErr((e) => 3).unwrapErr(), 3)
-  t.is(Ok(2).map((e) => 4).mapErr((e) => 5).unwrap(), 4)
-  t.is(Err(4)
-    .mapErr((e) => e * 2)
-    .mapErr((e) => e - 1)
-    .map((v) => v + 1)
-    .unwrapErr(), 7)
-})
+// test('map :: Result f => f a b ~> (a -> r) -> f r', (t) => {
+//   t.is(Ok(1).map((a) => a + 1).unwrapOr(100), 2)
+//   t.is(Err(1).map((a) => a + 1).unwrapOr(100), 100)
+//   t.is(Err(1).map((a) => a + 1).unwrapErr(), 1)
+// })
 
-test('bimap :: Result f => f a b ~> (a -> q) -> (b -> z) -> f q z', (t) => {
-  const foo = (x) => x * x
-  const bar = (y) => y + y
+// test('mapErr :: Result f => f a b ~> (b -> r) -> f r', (t) => {
+//   t.is(Ok(2).mapErr((e) => 3).unwrap(), 2)
+//   t.is(Err(2).mapErr((e) => 3).unwrapErr(), 3)
+//   t.is(Ok(2).map((e) => 4).mapErr((e) => 5).unwrap(), 4)
+//   t.is(Err(4)
+//     .mapErr((e) => e * 2)
+//     .mapErr((e) => e - 1)
+//     .map((v) => v + 1)
+//     .unwrapErr(), 7)
+// })
 
-  t.is(Ok(4).bimap(foo, bar).unwrap(), 16)
-  t.is(Err(4).bimap(foo, bar).unwrapErr(), 8)
-})
+// test('bimap :: Result f => f a b ~> (a -> q) -> (b -> z) -> f q z', (t) => {
+//   const foo = (x) => x * x
+//   const bar = (y) => y + y
 
-test('chain :: Result f => f a b ~> (a -> f q b) -> f q b', (t) => {
-  t.is(Ok(1).chain((value) => Ok(value + 1)).unwrap(), 2)
-  t.is(Ok(1).chain((value) => Err(value - 1)).unwrapErr(), 0)
+//   t.is(Ok(4).bimap(foo, bar).unwrap(), 16)
+//   t.is(Err(4).bimap(foo, bar).unwrapErr(), 8)
+// })
 
-  t.is(Err(1).chain((value) => Ok(value + 1)).unwrapErr(), 1)
-  t.is(Err(1).chain((value) => Err(value - 1)).unwrapErr(), 1)
-})
+// test('chain :: Result f => f a b ~> (a -> f q b) -> f q b', (t) => {
+//   t.is(Ok(1).chain((value) => Ok(value + 1)).unwrap(), 2)
+//   t.is(Ok(1).chain((value) => Err(value - 1)).unwrapErr(), 0)
 
-test('chainErr: :: Result f => f a b ~> (b -> f a z) -> f a z', (t) => {
-  t.is(Ok(1).chainErr((value) => Ok(value + 1)).unwrap(), 1)
-  t.is(Ok(1).chainErr((value) => Err(value - 1)).unwrap(), 1)
+//   t.is(Err(1).chain((value) => Ok(value + 1)).unwrapErr(), 1)
+//   t.is(Err(1).chain((value) => Err(value - 1)).unwrapErr(), 1)
+// })
 
-  t.is(Err(1).chainErr((value) => Ok(value + 1)).unwrap(), 2)
-  t.is(Err(1).chainErr((value) => Err(value - 1)).unwrapErr(), 0)
-})
+// test('chainErr: :: Result f => f a b ~> (b -> f a z) -> f a z', (t) => {
+//   t.is(Ok(1).chainErr((value) => Ok(value + 1)).unwrap(), 1)
+//   t.is(Ok(1).chainErr((value) => Err(value - 1)).unwrap(), 1)
 
-test('iter()', (t) => {
-  t.is(Ok(1).iter().next().value, 1, 'Ok::iter() return iterable over single item')
-  t.is(Err(new Error('')).iter().next().done, true, 'Err::iter() return done iterable')
-})
+//   t.is(Err(1).chainErr((value) => Ok(value + 1)).unwrap(), 2)
+//   t.is(Err(1).chainErr((value) => Err(value - 1)).unwrapErr(), 0)
+// })
 
-test('and :: Result f => f a b ~> f q b -> f q b', (t) => {
-  let x = Ok(2)
-  let y = Err('foo')
+// test('iter()', (t) => {
+//   t.is(Ok(1).iter().next().value, 1, 'Ok::iter() return iterable over single item')
+//   t.is(Err(new Error('')).iter().next().done, true, 'Err::iter() return done iterable')
+// })
 
-  t.is(x.and(y).unwrapErr(), 'foo')
+// test('and :: Result f => f a b ~> f q b -> f q b', (t) => {
+//   let x = Ok(2)
+//   let y = Err('foo')
 
-  x = Err('bar')
-  y = Ok(2)
-  t.is(x.and(y).unwrapErr(), 'bar')
+//   t.is(x.and(y).unwrapErr(), 'foo')
 
-  x = Ok(1)
-  y = Ok(2)
-  t.is(x.and(y).unwrap(), 2)
-})
+//   x = Err('bar')
+//   y = Ok(2)
+//   t.is(x.and(y).unwrapErr(), 'bar')
 
-test('andThen :: Result f => f a b ~> (a -> f q b) -> f q b', (t) => {
-  // :: Result f, b => a -> f a b
-  const sq = (x) => Ok(x * x)
-  const err = (x) => Err(x)
+//   x = Ok(1)
+//   y = Ok(2)
+//   t.is(x.and(y).unwrap(), 2)
+// })
 
-  t.is(Ok(2).andThen(sq).andThen(sq).unwrap(), 16)
-  t.is(Ok(2).andThen(sq).andThen(err).unwrapErr(), 4)
-  t.is(Ok(2).andThen(err).andThen(sq).unwrapErr(), 2)
-  t.is(Err(3).andThen(sq).andThen(sq).unwrapErr(), 3)
-})
+// test('andThen :: Result f => f a b ~> (a -> f q b) -> f q b', (t) => {
+//   // :: Result f, b => a -> f a b
+//   const sq = (x) => Ok(x * x)
+//   const err = (x) => Err(x)
 
-test('or :: Result f => f a b ~> f a z -> f a z', (t) => {
-  let x, y
+//   t.is(Ok(2).andThen(sq).andThen(sq).unwrap(), 16)
+//   t.is(Ok(2).andThen(sq).andThen(err).unwrapErr(), 4)
+//   t.is(Ok(2).andThen(err).andThen(sq).unwrapErr(), 2)
+//   t.is(Err(3).andThen(sq).andThen(sq).unwrapErr(), 3)
+// })
 
-  x = Ok(2)
-  y = Err(10)
-  t.is(x.or(y).unwrap(), 2)
+// test('or :: Result f => f a b ~> f a z -> f a z', (t) => {
+//   let x, y
 
-  x = Err(10)
-  y = Ok(2)
-  t.is(x.or(y).unwrap(), 2)
+//   x = Ok(2)
+//   y = Err(10)
+//   t.is(x.or(y).unwrap(), 2)
 
-  x = Err(2)
-  y = Err(10)
-  t.is(x.or(y).unwrapErr(), 10)
+//   x = Err(10)
+//   y = Ok(2)
+//   t.is(x.or(y).unwrap(), 2)
 
-  x = Ok(2)
-  y = Ok(100)
-  t.is(x.or(y).unwrap(), 2)
-})
+//   x = Err(2)
+//   y = Err(10)
+//   t.is(x.or(y).unwrapErr(), 10)
 
-test('orElse :: Result f => f a b ~> (b -> f a z) -> f a z', (t) => {
-  // :: Result f, b => a -> f a b
-  const sq = (x) => Ok(x * x)
-  const err = (x) => Err(x)
+//   x = Ok(2)
+//   y = Ok(100)
+//   t.is(x.or(y).unwrap(), 2)
+// })
 
-  t.is(Ok(2).orElse(sq).orElse(sq).unwrap(), 2)
-  t.is(Ok(2).orElse(err).orElse(sq).unwrap(), 2)
-  t.is(Err(3).orElse(sq).orElse(err).unwrap(), 9)
-  t.is(Err(3).orElse(err).orElse(err).unwrapErr(), 3)
-})
+// test('orElse :: Result f => f a b ~> (b -> f a z) -> f a z', (t) => {
+//   // :: Result f, b => a -> f a b
+//   const sq = (x) => Ok(x * x)
+//   const err = (x) => Err(x)
 
-test('unwrap :: Result f => f a b ~> a!', (t) => {
-  t.throws(() => {
-    Err('emergency failure').unwrap()
-  }, /emergency failure/)
+//   t.is(Ok(2).orElse(sq).orElse(sq).unwrap(), 2)
+//   t.is(Ok(2).orElse(err).orElse(sq).unwrap(), 2)
+//   t.is(Err(3).orElse(sq).orElse(err).unwrap(), 9)
+//   t.is(Err(3).orElse(err).orElse(err).unwrapErr(), 3)
+// })
 
-  t.notThrows(() => {
-    t.is(Ok(2).unwrap(), 2)
-  })
-})
+// test('unwrap :: Result f => f a b ~> a!', (t) => {
+//   t.throws(() => {
+//     Err('emergency failure').unwrap()
+//   }, /emergency failure/)
+
+//   t.notThrows(() => {
+//     t.is(Ok(2).unwrap(), 2)
+//   })
+// })
 
 
-test('unwrapOr :: Result f => f a b ~> a -> a', (t) => {
-  t.is(Result.ok(12).unwrapOr(1), 12)
-  t.is(Result.err('foo').unwrapOr(19), 19)
-})
+// test('unwrapOr :: Result f => f a b ~> a -> a', (t) => {
+//   t.is(Result.ok(12).unwrapOr(1), 12)
+//   t.is(Result.err('foo').unwrapOr(19), 19)
+// })
 
-test('unwrapOrElse :: Result f => f a b ~> (b -> a) -> a', (t) => {
-  const count = (x) => x.length
+// test('unwrapOrElse :: Result f => f a b ~> (b -> a) -> a', (t) => {
+//   const count = (x) => x.length
 
-  t.is(Ok(2).unwrapOrElse(count), 2)
-  t.is(Err('foo').unwrapOrElse(count), 3)
-})
+//   t.is(Ok(2).unwrapOrElse(count), 2)
+//   t.is(Err('foo').unwrapOrElse(count), 3)
+// })
 
-test('unwrapErr :: Result f => f a b ~> b!', (t) => {
-  t.throws(() => {
-    Ok(2).unwrapErr()
-  }, /2/)
+// test('unwrapErr :: Result f => f a b ~> b!', (t) => {
+//   t.throws(() => {
+//     Ok(2).unwrapErr()
+//   }, /2/)
 
-  t.notThrows(() => {
-    t.is(Err(10).unwrapErr(), 10)
-  })
-})
+//   t.notThrows(() => {
+//     t.is(Err(10).unwrapErr(), 10)
+//   })
+// })
 
-test('expect :: Result f => f a b ~> String -> a!', (t) => {
-  t.throws(() => {
-    Err('failure').expect('testing expect')
-  }, /testing expect/)
+// test('expect :: Result f => f a b ~> String -> a!', (t) => {
+//   t.throws(() => {
+//     Err('failure').expect('testing expect')
+//   }, /testing expect/)
 
-  t.notThrows(() => {
-    t.is(Ok(12).expect('not throws'), 12)
-  })
-})
+//   t.notThrows(() => {
+//     t.is(Ok(12).expect('not throws'), 12)
+//   })
+// })
 
-test('expectErr :: Result f => f a b ~> String -> b!', (t) => {
-  t.throws(() => {
-    Ok(12).expectErr('testing expectErr')
-  }, /testing expectErr: 12/)
+// test('expectErr :: Result f => f a b ~> String -> b!', (t) => {
+//   t.throws(() => {
+//     Ok(12).expectErr('testing expectErr')
+//   }, /testing expectErr: 12/)
 
-  t.notThrows(() => {
-    t.is(Err(12).expectErr('not throws'), 12)
-  })
-})
+//   t.notThrows(() => {
+//     t.is(Err(12).expectErr('not throws'), 12)
+//   })
+// })
 
-test('promise :: (Result f, Promise p) => f a b ~> p a b', async (t) => {
-  t.true(Ok(1).promise() instanceof Promise)
-  // t.true(Err.from(2).promise() instanceof Promise)
+// test('promise :: (Result f, Promise p) => f a b ~> p a b', async (t) => {
+//   t.true(Ok(1).promise() instanceof Promise)
+//   // t.true(Err.from(2).promise() instanceof Promise)
 
-  t.notThrows(async () => {
-    t.is(await Ok(1).promise(), 1)
-  })
+//   t.notThrows(async () => {
+//     t.is(await Ok(1).promise(), 1)
+//   })
 
-  try {
-    await Err(2).promise()
-  }
-  catch (error) {
-    t.is(error, 2)
-  }
-})
+//   try {
+//     await Err(2).promise()
+//   }
+//   catch (error) {
+//     t.is(error, 2)
+//   }
+// })
 
-test('swap :: Result f => f a b ~> f b a', (t) => {
-  t.is(Ok(1).swap().unwrapErr(), 1)
-  t.is(Err(2).swap().unwrap(), 2)
-  t.is(Ok(1).swap().swap().unwrap(), 1)
-  t.is(Err(2).swap().swap().unwrapErr(), 2)
-})
+// test('swap :: Result f => f a b ~> f b a', (t) => {
+//   t.is(Ok(1).swap().unwrapErr(), 1)
+//   t.is(Err(2).swap().unwrap(), 2)
+//   t.is(Ok(1).swap().swap().unwrap(), 1)
+//   t.is(Err(2).swap().swap().unwrapErr(), 2)
+// })
 
-test('combine .and() and () to make all() function', (t) => {
-  // all :: Result f, Array l => l (f a b) -> f a b
-  const all = (ls) => ls.reduce((p, c) => p.and(c), Ok(true))
+// test('combine .and() and () to make all() function', (t) => {
+//   // all :: Result f, Array l => l (f a b) -> f a b
+//   const all = (ls) => ls.reduce((p, c) => p.and(c), Ok(true))
 
-  t.is(all([Ok(1), Ok(2)]).unwrap(), 2)
-})
+//   t.is(all([Ok(1), Ok(2)]).unwrap(), 2)
+// })
 
-test('extract :: (Result f, Tuple t) => Result f a b ~> t a', (t) => {
-  t.deepEqual(Ok(1).extract(), [1])
-  t.deepEqual(Err(1).extract(), [])
-})
+// test('extract :: (Result f, Tuple t) => Result f a b ~> t a', (t) => {
+//   t.deepEqual(Ok(1).extract(), [1])
+//   t.deepEqual(Err(1).extract(), [])
+// })
 
-test('extract :: (Result f, Tuple t) => Result f a b ~> t b', (t) => {
-  t.deepEqual(Ok(1).extractErr(), [])
-  t.deepEqual(Err(1).extractErr(), [1])
-})
+// test('extract :: (Result f, Tuple t) => Result f a b ~> t b', (t) => {
+//   t.deepEqual(Ok(1).extractErr(), [])
+//   t.deepEqual(Err(1).extractErr(), [1])
+// })
 
