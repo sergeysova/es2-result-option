@@ -232,8 +232,8 @@ function option$is(value) {
 }
 
 function option$into(value) {
-  return isNullable(value)
-    ? None.of()
+  return option$is(value)
+    ? value
     : Some.of(value)
 }
 

@@ -78,10 +78,12 @@ test('::is', (t) => {
 
 // into :: Option f => a -> f a
 test('::into', (t) => {
+  t.deepEqual(Option.into(Some(1)), Some(1))
+  t.deepEqual(Option.into(None()), None())
   t.deepEqual(Option.into(1), Some.of(1))
-  t.deepEqual(Option.into(NaN), Option.zero())
-  t.true(Option.into(undefined).isNone())
-  t.true(Option.into(null).isNone())
+  t.deepEqual(Option.into(NaN), Some.of(NaN))
+  t.false(Option.into(undefined).isNone())
+  t.false(Option.into(null).isNone())
 })
 
 // alt :: Alt f => f a ~> f a -> f a
