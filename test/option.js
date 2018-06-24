@@ -232,6 +232,15 @@ test('.filter', (t) => {
   t.deepEqual(v.filter(() => false), w.filter(() => false), 'annihilation')
 })
 
+// inspect :: Option f => f a ~> () -> String
+test('.inspect', (t) => {
+  t.is(Some(1).inspect(), 'Some(1)')
+  t.is(None().inspect(), 'None()')
+  t.is(None(2).inspect(), 'None()')
+  t.is(Some(Some(1)).inspect(), 'Some(Some(1))')
+  t.is(Some(None()).inspect(), 'Some(None())')
+})
+
 // isNone :: Option f => f a ~> () -> Boolean
 test('.isNone', (t) => {
   t.false(Some.of(1).isNone())
@@ -347,6 +356,18 @@ test('.orElse', (t) => {
 
   t.is(a.orElse(() => d).orElse(() => c), a.orElse(() => d.orElse(() => c)), 'associativity with None')
   t.is(d.orElse(() => b).orElse(() => c), d.orElse(() => b.orElse(() => c)), 'associativity with None')
+})
+
+// toString :: Option f => f a ~> () -> String
+test('.toString', (t) => {
+  t.is(Some(1).toString(), 'Some(1)')
+  t.is(None().toString(), 'None()')
+  t.is(None(2).toString(), 'None()')
+  t.is(Some(Some(1)).toString(), 'Some(Some(1))')
+  t.is(Some(None()).toString(), 'Some(None())')
+
+  t.is(String(Some(Some(1))), 'Some(Some(1))')
+  t.is(String(Some(None())), 'Some(None())')
 })
 
 test('fantasy >> Setoid', (t) => {

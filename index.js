@@ -107,6 +107,14 @@ Object.assign(Some.prototype, {
   },
 
   of: Some.of,
+
+  toString() {
+    return `Some(${this[ø]})`
+  },
+
+  inspect() {
+    return this.toString()
+  },
 })
 
 const nothing = Symbol('None')
@@ -206,6 +214,14 @@ Object.assign(None.prototype, {
 
   '@@show': function __show() {
     return 'None()'
+  },
+
+  toString() {
+    return 'None()'
+  },
+
+  inspect() {
+    return this.toString()
   },
 
   of: None.of,

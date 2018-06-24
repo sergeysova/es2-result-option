@@ -61,6 +61,7 @@ declare class OptionClass<A> {
   extractOr(defaultValue: A): A;
   extractOrElse(defaultƒ: () => A): A;
   filter(predicate: (value: A) => boolean): OptionClass<A>;
+  inspect(): string;
   isNone(): boolean;
   isSome(): boolean;
   iter(): Iterator<A>;
@@ -71,6 +72,7 @@ declare class OptionClass<A> {
   okOrElse<E>(errorFn: () => E): ResultClass<A, E>;
   or(option: OptionClass<A>): OptionClass<A>;
   orElse(ƒ: () => OptionClass<A>): OptionClass<A>;
+  toString(): string;
 }
 
 export class Some<A> extends OptionClass<A> {}
