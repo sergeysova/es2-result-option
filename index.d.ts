@@ -81,18 +81,20 @@ export class None<A> extends OptionClass<A> {
 }
 
 type Option = {
-  some: <T>(value: T) => OptionClass<T>,
-  none: <T>() => OptionClass<T>,
-  is: (value: any) => boolean,
-  into: <T>(value?: T) => OptionClass<T>,
-  zero: <T>() => OptionClass<T>,
-  encase<A, Rs>(fn: (a: A) => Rs): ((a: A) => OptionClass<Rs>);
-  encase<A, B, Rs>(fn: (a: A, b: B) => Rs): ((a: A, b: B) => OptionClass<Rs>);
-  encase<A, B, C, Rs>(fn: (a: A, b: B, c: C) => Rs): ((a: A, b: B, c: C) => OptionClass<Rs>);
-  encase<A, B, C, D, Rs>(fn: (a: A, b: B, c: C, d: D) => Rs): ((a: A, b: B, c: C, d: D) => OptionClass<Rs>);
-  encase<A, B, C, D, E, Rs>(fn: (a: A, b: B, c: C, d: D, e: E) => Rs): ((a: A, b: B, c: C, d: D, e: E) => OptionClass<Rs>);
-  encase<A, B, C, D, E, F, Rs>(fn: (a: A, b: B, c: C, d: D, e: E, f: F) => Rs): ((a: A, b: B, c: C, d: D, e: E, f: F) => OptionClass<Rs>);
   encase<A, B, C, D, E, F, J, Rs>(fn: (a: A, b: B, c: C, d: D, e: E, f: F, j: J) => Rs): ((a: A, b: B, c: C, d: D, e: E, f: F, j: J) => OptionClass<Rs>);
+  encase<A, B, C, D, E, F, Rs>(fn: (a: A, b: B, c: C, d: D, e: E, f: F) => Rs): ((a: A, b: B, c: C, d: D, e: E, f: F) => OptionClass<Rs>);
+  encase<A, B, C, D, E, Rs>(fn: (a: A, b: B, c: C, d: D, e: E) => Rs): ((a: A, b: B, c: C, d: D, e: E) => OptionClass<Rs>);
+  encase<A, B, C, D, Rs>(fn: (a: A, b: B, c: C, d: D) => Rs): ((a: A, b: B, c: C, d: D) => OptionClass<Rs>);
+  encase<A, B, C, Rs>(fn: (a: A, b: B, c: C) => Rs): ((a: A, b: B, c: C) => OptionClass<Rs>);
+  encase<A, B, Rs>(fn: (a: A, b: B) => Rs): ((a: A, b: B) => OptionClass<Rs>);
+  encase<A, Rs>(fn: (a: A) => Rs): ((a: A) => OptionClass<Rs>);
+  fromNullable<A>(value: A | Number | null | undefined): OptionClass<A>;
+  into<T>(value?: T): OptionClass<T>;
+  is(value: any): boolean;
+  none<T>(): OptionClass<T>;
+  of<T>(value: T): OptionClass<T>;
+  some<T>(value: T): OptionClass<T>;
+  zero<T>(): OptionClass<T>;
 }
 
 export const Option: Option

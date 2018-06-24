@@ -248,14 +248,21 @@ function option$encase(ƒ) {
   }
 }
 
+function option$fromNullable(value) {
+  return isNullable(value)
+    ? None.of()
+    : Some.of(value)
+}
+
 const Option = {
-  some: Some.of,
+  encase: option$encase,
+  fromNullable: option$fromNullable,
+  into: option$into,
+  is: option$is,
   none: None.of,
   of: Some.of,
+  some: Some.of,
   zero: None.of,
-  is: option$is,
-  into: option$into,
-  encase: option$encase,
 }
 
 Some.prototype[FL.equals] = Some.prototype.equals

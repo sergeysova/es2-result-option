@@ -64,6 +64,27 @@ test('::encase', (t) => {
   t.true(fF().isSome())
 })
 
+// fromNullable :: Option f => a -> f a
+test('::fromNullable', (t) => {
+  t.deepEqual(Option.fromNullable(0), Some(0))
+  t.deepEqual(Option.fromNullable(''), Some(''))
+  t.deepEqual(Option.fromNullable(false), Some(false))
+  t.deepEqual(Option.fromNullable([]), Some([]))
+  t.deepEqual(Option.fromNullable({}), Some({}))
+
+  t.deepEqual(Option.fromNullable(null), None())
+  t.deepEqual(Option.fromNullable(undefined), None())
+  t.deepEqual(Option.fromNullable(NaN), None())
+
+  t.deepEqual(Option.fromNullable(None()), Some(None()))
+  t.deepEqual(Option.fromNullable(Some(1)), Some(Some(1)))
+
+  t.deepEqual(
+    Some(null).chain(Option.fromNullable),
+    None()
+  )
+})
+
 // is :: a -> Boolean
 test('::is', (t) => {
   t.true(Option.is(Some(1)))
