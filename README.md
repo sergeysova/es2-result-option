@@ -49,7 +49,7 @@ function divide(numerator, denominator) {
 }
 
 const result = divide(12, 3)
-  .unwrapOr(0)
+  .extractOr(0)
 
 assert(result, 4)
 ```
@@ -81,14 +81,14 @@ function getNumberOver5(): Option<number> {
     return Option.none()
   }
 
-  return Some.of(number)
+  return Some(number)
 }
 
 function printNumber(num: Option<number>) {
   console.log(`Generated number: ${num.extractOr(0)}`)
 }
 
-printNumber(getNumberOver5().or(Some.of(10)))
+printNumber(getNumberOver5().or(Some(10)))
 ```
 
 ```ts
