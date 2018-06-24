@@ -122,16 +122,17 @@ Object.assign(Some.prototype, {
 })
 
 const nothing = Symbol('None')
+const noneConst = new None()
 
 function None() {
   if (!(this instanceof None)) {
-    return new None()
+    return noneConst
   }
   this[ø] = nothing
   this[type] = 'None'
 }
 
-None.of = () => new None()
+None.of = () => noneConst
 
 Object.assign(None.prototype, {
 
