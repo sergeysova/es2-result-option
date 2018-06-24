@@ -235,6 +235,7 @@ function option$encase(ƒ) {
 const Option = {
   some: Some.of,
   none: None.of,
+  of: Some.of,
   zero: None.of,
   is: option$is,
   into: option$into,
