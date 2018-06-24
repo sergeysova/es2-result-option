@@ -200,6 +200,15 @@ test('.equals', (t) => {
   t.is(c.equals(d), d.equals(a), 'transitivity 2')
 })
 
+// exists :: Option f => f a ~> (a -> Boolean) -> Boolean
+test('.exists', (t) => {
+  const ƒ = (a) => a > 1
+
+  t.true(Some.of(2).exists(ƒ))
+  t.false(Some.of(1).exists(ƒ))
+  t.false(Option.zero().exists(ƒ))
+})
+
 // extend :: Extend w => w a ~> (w a -> b) -> w b
 test('.extend', (t) => {
   const w = Some.of(1)

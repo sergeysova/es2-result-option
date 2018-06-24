@@ -57,6 +57,7 @@ declare class OptionClass<A> {
   ap<B>(option: OptionClass<((value: A) => B)>): OptionClass<B>;
   chain<B>(optionƒ: (value: A) => OptionClass<B>): OptionClass<B>;
   equals(option: OptionClass<A>): boolean;
+  exists(ƒ: (value: A) => boolean): boolean;
   extend<B>(ƒ: (option: OptionClass<A>) => B): OptionClass<B>;
   extractOr(defaultValue: A): A;
   extractOrElse(defaultƒ: () => A): A;

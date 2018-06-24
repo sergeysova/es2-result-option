@@ -58,6 +58,10 @@ Object.assign(Some.prototype, {
     return this.map(mapƒ)
   },
 
+  exists(ƒ) {
+    return Boolean(ƒ(this[ø]))
+  },
+
   or(/* option */) {
     return this
   },
@@ -166,6 +170,10 @@ Object.assign(None.prototype, {
 
   mapOrElse(defaultƒ /* mapƒ */) {
     return Some.of(defaultƒ())
+  },
+
+  exists(/* ƒ */) {
+    return false
   },
 
   or(option) {
