@@ -57,3 +57,29 @@ import { Option, Some, None } from '@es2/result-option'
 - [`orElse`](#orelse)
 - [`orElse`](#orelse)
 - [`toString`](#tostring)
+
+
+## Documentation
+
+### `alt`
+
+```hs
+alt :: Alt f => f a ~> f a -> f a
+```
+
+```ts
+alt(option: OptionClass<A>): OptionClass<A>;
+```
+
+[`Alt`](https://github.com/fantasyland/fantasy-land#alt).
+
+`alt` short for alternative, takes another `Option`.
+If current `Option` is a `Some` type then it will returned, if it is a `None` type then it will return the next `Some` from arguments if it exists.
+
+If both are `None` then it will return `None`.
+
+```js
+t.deepEqual(Some(1).alt(Some(2)), Some(1))
+t.deepEqual(None().alt(Some(2)), Some(2))
+t.deepEqual(None().alt(None()), None())
+```
